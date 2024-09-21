@@ -21,11 +21,16 @@ public class GameManager : MonoBehaviour
     }
 
     // For managers
-    [SerializeField] private GridManager gridManager;
+    private GridManager gridManager;
     
     // For setting up the gird
-    public int gridWidth = 4;
-    public int gridHeight = 4;
+    public int gridWidth = 5;
+    public int gridHeight = 5;
+    
+    // For player
+    private GameObject playerPrefab;
+    private GameObject player;
+    private GhostInteraction playerInteraction;
     
     // Start is called before the first frame update
     void Start()
@@ -35,6 +40,16 @@ public class GameManager : MonoBehaviour
         
         // Make grid
         gridManager.CreateGrid(gridWidth, gridHeight);
+        
+        // Getting the player prefab
+        playerPrefab = Resources.Load<GameObject>("Prefabs/Characters/Player");
+        
+        // Instantiate the player in the scene
+        Vector3 playerPosition = new Vector3(
+            gridManager.girdArray[Mathf.FloorToInt(gridWidth / 2), 0].transform.position.x, 
+            0, 
+            gridManager.girdArray[Mathf.FloorToInt(gridWidth / 2), 0].transform.position.z);
+        player = Instantiate(playerPrefab, playerPosition, Quaternion.identity);
     }
 
     // Update is called once per frame
