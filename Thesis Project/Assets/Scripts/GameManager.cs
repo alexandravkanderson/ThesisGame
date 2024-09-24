@@ -6,13 +6,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // Making the GameManager singleton
-    public static GameManager instanse;
+    public static GameManager instance;
 
     private void Awake()
     {
-        if (instanse == null)
+        if (instance == null)
         {
-            instanse = this;
+            instance = this;
         }
         else
         {
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     private GameObject shell;
     
     // For start the battle
-    [SerializeField] private bool isBattleStarted = false;
+    public bool isBattleStarted = false;
     
     // Start is called before the first frame update
     void Start()

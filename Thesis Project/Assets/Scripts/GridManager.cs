@@ -58,8 +58,8 @@ public class GridManager : MonoBehaviour
     private Vector3 GetWorldPositionFromGridPosition(int x, int z)
     {
         return new Vector3(
-            x - GameManager.instanse.gridWidth/2, 
+            x - GameManager.instance.gridWidth/2, 
             -0.5f, 
-            z - GameManager.instanse.gridHeight/2 + 0.5f);
+            z - GameManager.instance.gridHeight/2 + 0.5f);
     }
 }

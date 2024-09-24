@@ -29,55 +29,60 @@ public class PlayerInteraction : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        // CLICK
-        // If the left mouse button is down
-        if (Input.GetMouseButtonDown(0))
+        // If it's before the battle started, interact
+        // otherwise, forbid interaction
+        if (!GameManager.instance.isBattleStarted)
         {
-            // Cast a ray, from the camera to the mouse position
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            // Check if the ray hits any object
-            if (Physics.Raycast(ray, out hit))
+            // CLICK
+            // If the left mouse button is down
+            if (Input.GetMouseButtonDown(0))
             {
-                // Check if the object is interactable
-                if (hit.collider.CompareTag(tagName)) // tagName override in the sub-class
+                // Cast a ray, from the camera to the mouse position
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                // Check if the ray hits any object
+                if (Physics.Raycast(ray, out hit))
                 {
-                    // Store the selected object (parent)
-                    selectedObject = hit.collider.gameObject.transform.parent.gameObject;
-                    isDragging = true;
+                    // Check if the object is interactable
+                    if (hit.collider.CompareTag(tagName)) // tagName override in the sub-class
+                    {
+                        // Store the selected object (parent)
+                        selectedObject = hit.collider.gameObject.transform.parent.gameObject;
+                        isDragging = true;
                     
-                    // For debugging only
-                    Debug.Log(selectedObject.name);
+                        // For debugging only
+                        Debug.Log(selectedObject.name);
                     
-                    // Store original position
-                    originalPosition = selectedObject.transform.position;
+                        // Store original position
+                        originalPosition = selectedObject.transform.position;
                     
-                    // Calculate the offset between the object and the point where the ray hit it
-                    dragOffset = selectedObject.transform.position - hit.point;
+                        // Calculate the offset between the object and the point where the ray hit it
+                        dragOffset = selectedObject.transform.position - hit.point;
+                    }
                 }
             }
-        }
         
-        // DRAG
-        // While the mouse button is held down, move the object
-        if (Input.GetMouseButton(0) 
-            && isDragging 
-            && selectedObject != null)
-        {
-            // Move the selected object to follow the mouse
-            DraggingObject();
-        }
+            // DRAG
+            // While the mouse button is held down, move the object
+            if (Input.GetMouseButton(0) 
+                && isDragging 
+                && selectedObject != null)
+            {
+                // Move the selected object to follow the mouse
+                DraggingObject();
+            }
         
-        // DROP
-        // If the mouse button is released, stop dragging
-        if (Input.GetMouseButtonUp(0) 
-            && isDragging)
-        {
-            isDragging = false;
+            // DROP
+            // If the mouse button is released, stop dragging
+            if (Input.GetMouseButtonUp(0) 
+                && isDragging)
+            {
+                isDragging = false;
             
-            // Things happens after dropping the object
-            ReleasingObject();
+                // Things happens after dropping the object
+                ReleasingObject();
+            }
         }
     }
 

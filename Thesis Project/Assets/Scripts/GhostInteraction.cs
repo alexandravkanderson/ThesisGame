@@ -15,7 +15,7 @@ public class GhostInteraction : PlayerInteraction
         tagName = "Player";
         
         // Get gridManager
-        gridManager = GameManager.instanse.gameObject.GetComponent<GridManager>();
+        gridManager = GameManager.instance.gameObject.GetComponent<GridManager>();
     }
 
     protected override void ReleasingObject()
@@ -57,8 +57,8 @@ public class GhostInteraction : PlayerInteraction
         // Calculating the boundaries of the grid
         // NOTE: fragile, DO NOT touch the offset numbers
         return pos.x >= gridManager.girdArray[0, 0].transform.position.x - 0.5f &&
-               pos.x <= gridManager.girdArray[GameManager.instanse.gridWidth - 1, 0].transform.position.x + 0.5f &&
+               pos.x <= gridManager.girdArray[GameManager.instance.gridWidth - 1, 0].transform.position.x + 0.5f &&
                pos.z >= gridManager.girdArray[0, 0].transform.position.z &&
-               pos.z <= gridManager.girdArray[0, GameManager.instanse.gridHeight/2 - 1].transform.position.z + 0.5f;
+               pos.z <= gridManager.girdArray[0, GameManager.instance.gridHeight/2 - 1].transform.position.z + 0.5f;
     }
 }
