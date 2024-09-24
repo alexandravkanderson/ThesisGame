@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4619294d7ce5f364a9b3ac6275d78646, type: 3}
-  m_Name: GhostCharacter
+  m_Name: ShellCharacterAttribute
   m_EditorClassIdentifier: 
   healthPoint: 0
   attackPoint: 0

@@ -4,14 +4,14 @@ using UnityEngine;
 
 [CreateAssetMenu
     (        
-        fileName = "New Character",        
-        menuName = "Game Character",        
+        fileName = "New Character Attribute",        
+        menuName = "Game Character Attribute",        
         order = 0)
 ]
 
 public class CharacterAttributes : ScriptableObject
 {
     public int healthPoint;
-    public int attackPoint;
+    public int attackDamage;
     
 }

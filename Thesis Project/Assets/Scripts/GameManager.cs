@@ -32,6 +32,13 @@ public class GameManager : MonoBehaviour
     private GameObject player;
     private GhostInteraction playerInteraction;
     
+    // For the shell
+    private GameObject shellPrefab;
+    private GameObject shell;
+    
+    // For start the battle
+    [SerializeField] private bool isBattleStarted = false;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -56,5 +63,17 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+    
+    // "Start" button got pressed, start the auto-battle
+    public void StartBattle()
+    {
+        isBattleStarted = true;
+    }
+    
+    // For the Ghost pathfinding
+    Vector3 GetWorldPosition(int x, int y)
+    {
+        return Vector3.zero;
     }
 }
