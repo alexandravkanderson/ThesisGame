@@ -58,7 +58,7 @@ public class GhostInteraction : PlayerInteraction
         // NOTE: fragile, DO NOT touch the offset numbers
         return pos.x >= gridManager.girdArray[0, 0].transform.position.x - 0.5f &&
                pos.x <= gridManager.girdArray[GameManager.instanse.gridWidth - 1, 0].transform.position.x + 0.5f &&
-               pos.z >= gridManager.girdArray[0, 0].transform.position.z + 0.5f &&
+               pos.z >= gridManager.girdArray[0, 0].transform.position.z &&
                pos.z <= gridManager.girdArray[0, GameManager.instanse.gridHeight/2 - 1].transform.position.z + 0.5f;
     }
 }
