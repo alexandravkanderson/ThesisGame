@@ -94,6 +94,26 @@ public class GameManager : MonoBehaviour
     /// This method finds the path
     /// from the start position to the target position using A* pathfinding.
     /// </summary>
+    
+    // Node contains the grid position, walk-ability, and cost values
+    // The "parent" is used to retrace the path once the target is reached
+    public class Node
+    {
+        public Vector2Int Position;   // The grid position
+        public bool IsWalkable;       // Whether this node is walkable
+        public int gCost;             // Cost from start to this node
+        public int hCost;             // Heuristic cost from this node to the target
+        public Node Parent;           // Parent node for path retracing
+
+        public int fCost => gCost + hCost;  // Total cost
+
+        public Node(Vector2Int position, bool isWalkable)
+        {
+            Position = position;
+            IsWalkable = isWalkable;
+        }
+    }
+    
     public class Pathfinding
     {
         // Parameters:
@@ -106,75 +126,147 @@ public class GameManager : MonoBehaviour
             // This list stores the path nodes (grid positions) from start to target
             List<Vector2Int> path = new List<Vector2Int>();
             
+            // Create a 2D array of nodes for the grid
+            Node[,] nodeGrid = new Node[grid.GetLength(0), grid.GetLength(1)];
+
+            for (int x = 0; x < grid.GetLength(0); x++)
+            {
+                for (int y = 0; y < grid.GetLength(1); y++)
+                {
+                    nodeGrid[x, y] = new Node(new Vector2Int(x, y), grid[x, y]);
+                }
+            }
+            
             // Open list: keeps track of nodes that need to be checked / nodes to explore
             // Closed list: keeps track of nodes that have already been evaluated
-            List<Vector2Int> openList = new List<Vector2Int>();
-            HashSet<Vector2Int> closedList = new HashSet<Vector2Int>();
+            List<Node> openList = new List<Node>();
+            HashSet<Node> closedList = new HashSet<Node>();
+
+            Node startNode = nodeGrid[start.x, start.y];
+            Node targetNode = nodeGrid[target.x, target.y];
             
             // Add the starting position to the open list
-            openList.Add(start);
+            openList.Add(startNode);
             
             // Loop to simulate pathfinding
+            // This loop runs until there are no nodes left in the open list
             while (openList.Count > 0)
             {
                 // Get the current node (the first one in the open list)
-                Vector2Int currentNode = openList[0];
+                Node currentNode = openList[0];
+
+                // The current node is selected based on the lowest fCost.
+                // If two nodes have the same fCost,
+                // the one with the lower hCost is chosen (favoring those closer to the target)
+                for (int i = 0; i < openList.Count; i++)
+                {
+                    if (openList[i].fCost < currentNode.fCost ||
+                        openList[i].fCost == currentNode.fCost && openList[i].hCost < currentNode.hCost)
+                    {
+                        currentNode = openList[i];
+                    }
+                }
                 
-                openList.RemoveAt(0);  // Remove it from the open list
+                openList.Remove(currentNode);  // Remove it from the open list
                 closedList.Add(currentNode);  // Add it to the closed list
                 
                 // If the current node is the target, we've found a path
-                if (currentNode == target)
+                if (currentNode.Position == targetNode.Position)
                 {
-                    path.Add(currentNode);
+                    path = RetracePath(startNode, currentNode);
                     break;
                 }
                 
                 // Check neighboring nodes (up, down, left, right directions)
-                foreach (Vector2Int neighbor in GetNeighbors(currentNode, grid))
+                foreach (Node neighbor in GetNeighbors(currentNode, nodeGrid))
                 {
-                    // If the neighbor hasn't been evaluated yet, add it to the open list
-                    if (!closedList.Contains(neighbor))
+                    // If the neighbor is not walkable
+                    // or has already been evaluated (in the closed list), it is skipped.
+                    if (!neighbor.IsWalkable ||
+                        closedList.Contains(neighbor))
                     {
-                        openList.Add(neighbor);
+                        continue;
+                    }
+                    
+                    // The movement cost to the neighbor is calculated
+                    int newMovementCostToNeighbor = currentNode.gCost + 10; // Cost to move to neighbor
+                    
+                    // If it's lower than the neighbor's current gCost,
+                    // the neighbor's costs are updated
+                    // and its parent is set to the current node
+                    if (newMovementCostToNeighbor < neighbor.gCost ||
+                        !openList.Contains(neighbor))
+                    {
+                        neighbor.gCost = newMovementCostToNeighbor;
+                        neighbor.hCost = GetManhattanDistance(neighbor.Position, targetNode.Position);
+                        neighbor.Parent = currentNode;
+
+                        // If the neighbor is not already in the open list, it is added
+                        if (!openList.Contains(neighbor))
+                        {
+                            openList.Add(neighbor);
+                        }
                     }
                 }
-                
-                // Add the current node to the path list
-                path.Add(currentNode);
             }
             
             // Return the list of nodes that make up the path
             return path;
         }
+
+        private int GetManhattanDistance(Vector2Int a, Vector2Int b)
+        {
+            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y);
+        }
+        
+        // Once the target is reached,
+        // this method retraces the path from the end node back to the start node
+        // using the parent references
+        private List<Vector2Int> RetracePath(Node startNode, Node endNode)
+        {
+            List<Vector2Int> path = new List<Vector2Int>();
+            
+            Node currentNode = endNode;
+
+            while (currentNode != startNode)
+            {
+                path.Add(currentNode.Position);
+                currentNode = currentNode.Parent;
+            }
+            
+            path.Reverse();
+            return path;
+        }
         
         // This method gets the neighboring grid positions for a given node
         // Only up, down, left, and right neighbors are considered (no diagonals)
-        private List<Vector2Int> GetNeighbors(Vector2Int node, bool[,] grid)
+        private List<Node> GetNeighbors(Node node, Node[,] grid)
         {
-            List<Vector2Int> neighbors = new List<Vector2Int>();
+            List<Node> neighbors = new List<Node>();
             
+            // Check the four adjacent nodes
+            int x = node.Position.x;
+            int y = node.Position.y;
             
-            // Check left (if it's within grid bounds)
             // Left
-            if (node.x - 1 >= 0)
+            if (x - 1 >= 0)
             {
-                neighbors.Add(new Vector2Int(node.x - 1, node.y));
+                neighbors.Add(grid[x - 1, y]);
             }
             // Right
-            if (node.x + 1 < grid.GetLength(0))
+            if (x + 1 < grid.GetLength(0))
             {
-                neighbors.Add(new Vector2Int(node.x + 1, node.y));
+                neighbors.Add(grid[x + 1, y]);
             }
             // Up
-            if (node.y - 1 >= 0)
+            if (y - 1 >= 0)
             {
-                neighbors.Add(new Vector2Int(node.x, node.y - 1));
+                neighbors.Add(grid[x, y - 1]);
             }
             // Down
-            if (node.y + 1 < grid.GetLength(1))
+            if (y + 1 < grid.GetLength(1))
             {
-                neighbors.Add(new Vector2Int(node.x, node.y + 1));
+                neighbors.Add(grid[x, y + 1]);
             }
 
             return neighbors;

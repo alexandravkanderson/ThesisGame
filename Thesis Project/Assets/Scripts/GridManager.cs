@@ -55,13 +55,13 @@ public class GridManager : MonoBehaviour
                 // Store the cell in the grid array
                 gridArray[x, y] = newCell;
 
+                // Set the cell as walkable
+                walkableGridArray[x, y] = true;
+                
                 // If this grid is in the front half,
                 // set it to be ghost's grid
                 if (y < gridHeight / 2)
                 {
-                    // Set the cell as walkable
-                    walkableGridArray[x, y] = true;
-                    
                     // Color-tint
                     gridArray[x, y].GetComponent<MeshRenderer>().material.color = 
                         Color.HSVToRGB(0f, 0f, 0.6f);
