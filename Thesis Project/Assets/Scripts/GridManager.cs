@@ -8,8 +8,11 @@ public class GridManager : MonoBehaviour
     public GameObject gridCellPrefab;
     
     // Create a 2D-array to generate the grid
-    public GameObject[,] girdArray;
+    public GameObject[,] gridArray;
     private GameObject cellParent;
+    
+    // A 2D array to store walkable information
+    public bool[,] walkableGridArray;
     
     // Start is called before the first frame update
     void Start()
@@ -31,7 +34,8 @@ public class GridManager : MonoBehaviour
     public void CreateGrid(int gridWidth, int gridHeight)
     {
         // Initialize the grid array
-        girdArray = new GameObject[gridWidth, gridHeight];
+        gridArray = new GameObject[gridWidth, gridHeight];
+        walkableGridArray = new bool[gridWidth, gridHeight];
         
         // Create the grid
         for (int x = 0; x < gridWidth; x++)
@@ -49,17 +53,37 @@ public class GridManager : MonoBehaviour
                 newCell.name = $"Cell {x}, {y}";
                 
                 // Store the cell in the grid array
-                girdArray[x, y] = newCell;
+                gridArray[x, y] = newCell;
+
+                // If this grid is in the front half,
+                // set it to be ghost's grid
+                if (y < gridHeight / 2)
+                {
+                    // Set the cell as walkable
+                    walkableGridArray[x, y] = true;
+                    
+                    // Color-tint
+                    gridArray[x, y].GetComponent<MeshRenderer>().material.color = 
+                        Color.HSVToRGB(0f, 0f, 0.6f);
+                }
             }
         }
         
     }
 
-    private Vector3 GetWorldPositionFromGridPosition(int x, int z)
+    public Vector3 GetWorldPositionFromGridPosition(int x, int z)
     {
         return new Vector3(
-            x - GameManager.instance.gridWidth/2, 
-            -0.5f, 
-            z - GameManager.instance.gridHeight/2 + 0.5f);
+            x - GameManager.instance.gridWidth / 2, 
+            - 0.5f, 
+            z - GameManager.instance.gridHeight / 2 + 0.5f);
+    }
+
+    public Vector2Int GetGridPositionFromWorldPosition(Vector3 worldPosition)
+    {
+        int x = Mathf.RoundToInt(worldPosition.x + GameManager.instance.gridWidth / 2);
+        int y = Mathf.RoundToInt(worldPosition.z + GameManager.instance.gridHeight / 2 - 0.5f);
+
+        return new Vector2Int(x, y);
     }
 }

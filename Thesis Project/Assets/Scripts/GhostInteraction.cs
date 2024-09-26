@@ -56,9 +56,9 @@ public class GhostInteraction : PlayerInteraction
     {
         // Calculating the boundaries of the grid
         // NOTE: fragile, DO NOT touch the offset numbers
-        return pos.x >= gridManager.girdArray[0, 0].transform.position.x - 0.5f &&
-               pos.x <= gridManager.girdArray[GameManager.instance.gridWidth - 1, 0].transform.position.x + 0.5f &&
-               pos.z >= gridManager.girdArray[0, 0].transform.position.z &&
-               pos.z <= gridManager.girdArray[0, GameManager.instance.gridHeight/2 - 1].transform.position.z + 0.5f;
+        return pos.x >= gridManager.gridArray[0, 0].transform.position.x - 0.5f &&
+               pos.x <= gridManager.gridArray[GameManager.instance.gridWidth - 1, 0].transform.position.x + 0.5f &&
+               pos.z >= gridManager.gridArray[0, 0].transform.position.z &&
+               pos.z <= gridManager.gridArray[0, GameManager.instance.gridHeight/2 - 1].transform.position.z + 0.5f;
     }
 }
