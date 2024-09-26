@@ -10,7 +10,36 @@ public class CharacterGhost : Characters
     public GameManager.Pathfinding pathfinding;
     private Vector2Int selfGridPosition;
     
-    public float moveSpeed = 1.0f;
+    public float moveSpeed = 2.0f;
+
+    // For player attacking the enemy
+    [SerializeField] private bool isAttacking = false;
+
+    private CharacterShell characterShell;
+
+    public float playerHP
+    {
+        get
+        {
+            return base.HP;
+        }
+        set
+        {
+            base.HP = value;
+
+            if (base.HP <=0 )
+            {
+                // If the player's HP is 0, end the game,
+                // player loses
+                GameManager.instance.isPlayerWin = false;
+                GameManager.instance.GameEnding();
+            }
+            else
+            {
+                Debug.Log("Player HP: " + base.HP);
+            }
+        }
+    }
     
     protected override void Start()
     {
@@ -18,6 +47,13 @@ public class CharacterGhost : Characters
         
         // Wiring
         gridManager = GameManager.instance.gridManager;
+
+        // Player (Ghost) attributes
+        playerHP = base.HP;
+        
+        // Enemy (Shell) attributes
+        characterShell = GameManager.instance.characterShell;
+        
     }
 
     // Move the pawn to the grid position
@@ -51,6 +87,11 @@ public class CharacterGhost : Characters
             // Check if the ghost pawn is next to the shell
             if (IsNextToTarget(cell, target))
             {
+                // Shell starts to attack the player
+                characterShell.ShellAttack();
+                // Player starts to attack the shell
+                PlayerAttack();
+                
                 break; // Stop moving if next to the target grid
             }
             
@@ -80,5 +121,22 @@ public class CharacterGhost : Characters
         // Check if the pawn is next to the target in X or Z direction
         return (Mathf.Abs(current.x - target.x) == 0 && current.y == target.y) || 
                (Mathf.Abs(current.y - target.y) == 0 && current.x == target.x);
+    }
+    
+    // Attack
+    private void PlayerAttack()
+    {
+        isAttacking = true;
+        
+        InvokeRepeating(nameof(PlayerDealDamage), base.SP, base.SP);
+    }
+
+    private void PlayerDealDamage()
+    {
+        // If the game isn't ended, dell "AD" amount of damage
+        if (!GameManager.instance.isGameEnd)
+        {
+            characterShell.ShellHP -= AD;
+        }
     }
 }

@@ -8,8 +8,9 @@ public class Characters : MonoBehaviour
     [SerializeField] private CharacterAttributes characterAttributes;
     
     // For attributes
-    [SerializeField] private int HP; // Health point
-    [SerializeField] private int AD; // Attach damage
+    [SerializeField] protected float HP;      // Health point
+    [SerializeField] protected float AD;      // Attach damage
+    [SerializeField] protected float SP;    // Attach speed
     
     // Start is called before the first frame update
     protected virtual void Start()
@@ -19,11 +20,6 @@ public class Characters : MonoBehaviour
 
         HP = characterAttributes.healthPoint;
         AD = characterAttributes.attackDamage;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        SP = characterAttributes.attackSpeed;
     }
 }

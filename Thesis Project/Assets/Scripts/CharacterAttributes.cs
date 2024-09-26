@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class CharacterAttributes : ScriptableObject
 {
-    public int healthPoint;
-    public int attackDamage;
-    
+    public float healthPoint;
+    public float attackDamage;
+    public float attackSpeed;
 }

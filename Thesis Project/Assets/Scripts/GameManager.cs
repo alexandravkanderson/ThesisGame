@@ -31,14 +31,20 @@ public class GameManager : MonoBehaviour
     private GameObject playerPrefab;
     private GameObject player;
     private GhostInteraction playerInteraction; // drag-n-drop before the game started
-    private CharacterGhost characterGhost;      // character logic after the game started
+    public CharacterGhost characterGhost;       // character logic after the game started
     
     // For the shell
     private GameObject shellPrefab;
+    private Vector3 shellPosition;
     private GameObject shell;
+    public CharacterShell characterShell;       // character logic after the game started
     
     // For start the battle
     public bool isBattleStarted = false;
+    
+    // For the battle ending
+    public bool isGameEnd = false;
+    public bool isPlayerWin = true;
     
     // Start is called before the first frame update
     void Start()
@@ -68,11 +74,14 @@ public class GameManager : MonoBehaviour
         shellPrefab = Resources.Load<GameObject>("Prefabs/Characters/Shell");
         
         // Instantiate the shell in the scene
-        Vector3 shellPosition = new Vector3(
+        shellPosition = new Vector3(
             gridManager.gridArray[Mathf.FloorToInt(gridWidth / 2), gridHeight - 2].transform.position.x,
             0,
             gridManager.gridArray[Mathf.FloorToInt(gridWidth / 2), gridHeight - 2].transform.position.z);
         shell = Instantiate(shellPrefab, shellPosition, Quaternion.identity);
+        
+        // Wiring scripts
+        characterShell = shell.GetComponent<CharacterShell>();
     }
 
     // Update is called once per frame
@@ -87,7 +96,7 @@ public class GameManager : MonoBehaviour
         isBattleStarted = true;
         
         // Start player (ghost) movement
-        characterGhost.MoveTo(new Vector2Int(Mathf.FloorToInt(gridWidth / 2), gridHeight - 2));
+        characterGhost.MoveTo(gridManager.GetGridPositionFromWorldPosition(shellPosition)); // new Vector2Int(Mathf.FloorToInt(gridWidth / 2), gridHeight - 2)
     }
     
     /// <summary>
@@ -275,6 +284,23 @@ public class GameManager : MonoBehaviour
             }
 
             return neighbors;
+        }
+    }
+
+    public void GameEnding()
+    {
+        if (!isGameEnd)
+        {
+            if (isPlayerWin)
+            {
+                Debug.Log("The Player Wins.");
+            }
+            else
+            {
+                Debug.Log("The Player Loses.");
+            }
+
+            isGameEnd = true;
         }
     }
 }
