@@ -168,7 +168,7 @@ public class GameManager : MonoBehaviour
                 }
                 
                 openList.Remove(currentNode);  // Remove it from the open list
-                closedList.Add(currentNode);  // Add it to the closed list
+                closedList.Add(currentNode);   // Add it to the closed list
                 
                 // If the current node is the target, we've found a path
                 if (currentNode.Position == targetNode.Position)
@@ -208,6 +208,11 @@ public class GameManager : MonoBehaviour
                         }
                     }
                 }
+            }
+            
+            foreach (Vector2Int node in path)
+            {
+                Debug.Log($"Path node: {node}");
             }
             
             // Return the list of nodes that make up the path
