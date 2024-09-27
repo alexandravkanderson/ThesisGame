@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -45,6 +46,9 @@ public class GameManager : MonoBehaviour
     // For the battle ending
     public bool isGameEnd = false;
     public bool isPlayerWin = true;
+    
+    // For Shop
+    [SerializeField] private GameObject spawnedItem;
     
     // Start is called before the first frame update
     void Start()

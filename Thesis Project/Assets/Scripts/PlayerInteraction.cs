@@ -12,11 +12,11 @@ public class PlayerInteraction : MonoBehaviour
     
     private Camera mainCamera;
     public GameObject selectedObject;
-    [SerializeField] private bool isDragging;
+    [SerializeField] protected bool isDragging;
 
     protected string tagName = "";
 
-    private Vector3 dragOffset;
+    protected Vector3 dragOffset;
     public Vector3 originalPosition;  // Store the original position
     
     // Start is called before the first frame update
