@@ -14,6 +14,7 @@ public class CharacterGhost : Characters
 
     // For player attacking the enemy
     [SerializeField] private bool isAttacking = false;
+    [SerializeField] private ParticleSystem attactParticleSystem;
 
     private CharacterShell characterShell;
 
@@ -54,6 +55,8 @@ public class CharacterGhost : Characters
         // Enemy (Shell) attributes
         characterShell = GameManager.instance.characterShell;
         
+        // VFX child & particle system
+        attactParticleSystem = GetComponentInChildren<ParticleSystem>();
     }
 
     // Move the pawn to the grid position
@@ -137,6 +140,9 @@ public class CharacterGhost : Characters
         if (!GameManager.instance.isGameEnd)
         {
             characterShell.ShellHP -= AD;
+            
+            // VFX animation
+            attactParticleSystem.Play();
         }
     }
 }
