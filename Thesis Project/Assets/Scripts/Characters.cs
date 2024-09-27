@@ -8,9 +8,9 @@ public class Characters : MonoBehaviour
     [SerializeField] private CharacterAttributes characterAttributes;
     
     // For attributes
-    [SerializeField] protected float HP;      // Health point
-    [SerializeField] protected float AD;      // Attach damage
-    [SerializeField] protected float SP;    // Attach speed
+    public float HP;      // Health point
+    public float AD;      // Attach damage
+    public float SP;      // Attach speed
     
     // Start is called before the first frame update
     protected virtual void Start()

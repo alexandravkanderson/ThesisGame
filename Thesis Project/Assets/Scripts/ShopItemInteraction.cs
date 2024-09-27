@@ -83,8 +83,14 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler
                 GameManager.instance.characterGhost.playerHP += itemAttributes.modifier;
                 break;
             case Item.AD:
+                // Boost the players attack damage point
+                GameManager.instance.characterGhost.AD *= itemAttributes.modifier;
+                Debug.Log("Player AD: " + GameManager.instance.characterGhost.AD);
                 break;
             case Item.SP:
+                // Boost the players attacking speed
+                GameManager.instance.characterGhost.SP *= itemAttributes.modifier;
+                Debug.Log("Player SP: " + GameManager.instance.characterGhost.SP);
                 break;
         }
     }
