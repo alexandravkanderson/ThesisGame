@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -42,6 +44,8 @@ public class GameManager : MonoBehaviour
     
     // For start the battle
     public bool isBattleStarted = false;
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button restartButton;
     
     // For the battle ending
     public bool isGameEnd = false;
@@ -49,12 +53,22 @@ public class GameManager : MonoBehaviour
     
     // For Shop
     [SerializeField] private GameObject spawnedItem;
+    [SerializeField] private GameObject shopUI;
     
     // Start is called before the first frame update
     void Start()
     {
         // Wiring the managers
         gridManager = gameObject.GetComponent<GridManager>();
+        
+        // Wiring UI elements
+        shopUI = GameObject.Find("Canvas");
+        
+        startButton = shopUI.transform.GetChild(0).GetComponent<Button>();
+        startButton.gameObject.SetActive(true);
+
+        restartButton = shopUI.transform.GetChild(1).GetComponent<Button>();
+        restartButton.gameObject.SetActive(false);
         
         // Make grid
         gridManager.CreateGrid(gridWidth, gridHeight);
@@ -98,6 +112,9 @@ public class GameManager : MonoBehaviour
     public void StartBattle()
     {
         isBattleStarted = true;
+      
+        // Hide the Start button
+        startButton.gameObject.SetActive(false);
         
         // Start player (ghost) movement
         characterGhost.MoveTo(gridManager.GetGridPositionFromWorldPosition(shellPosition)); // new Vector2Int(Mathf.FloorToInt(gridWidth / 2), gridHeight - 2)
@@ -305,6 +322,14 @@ public class GameManager : MonoBehaviour
             }
 
             isGameEnd = true;
+            
+            // Show restart
+            restartButton.gameObject.SetActive(true);
         }
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("Start_Screen");
     }
 }
