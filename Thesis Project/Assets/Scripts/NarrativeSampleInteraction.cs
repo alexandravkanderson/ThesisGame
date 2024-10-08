@@ -3,28 +3,68 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+public enum NarrativeType
+{
+    TextBased,
+    Storyboard
+}
 
 public class NarrativeSampleInteraction : MonoBehaviour
 {
-    public TextMeshProUGUI narrativeText;
+    // TYPE
+    public NarrativeType narrativeType;
+    
+    // Text
+    [SerializeField] private TextMeshProUGUI narrativeText;
     
     // 0: Fist dialogue displayed
     // 1: Second dialogue displayed
     // 2: Third dialogue displayed -> the next click should be loading battle scene
-    private int isNarrativeFinished = 0; 
+    private int isNarrativeFinished = 0;
+
+    // Storyboard
+    [SerializeField] private Image storyboardImage;
     
     // Start is called before the first frame update
     void Start()
     {
-        // Wiring the Text
+        // Wiring the game objects
         narrativeText = GameObject.Find("NarrativeText").GetComponent<TextMeshProUGUI>();
-
-        narrativeText.fontStyle = FontStyles.Italic;
-        narrativeText.text = "What’s the last thing I remember?";
+        
+        // Text
+        if (narrativeType == NarrativeType.TextBased)
+        {
+            // Display
+            narrativeText.gameObject.SetActive(true);
+            storyboardImage.gameObject.SetActive(false);
+            
+            // The first sentence 
+            narrativeText.fontStyle = FontStyles.Italic;
+            narrativeText.text = "What’s the last thing I remember?";
+        }
+        // Storyboard
+        else if (narrativeType == NarrativeType.Storyboard)
+        {
+            
+        }
     }
 
     // Update is called once per frame
     void Update()
+    {
+        if (narrativeType == NarrativeType.TextBased)
+        {
+            TextBased();
+        }
+        else if (narrativeType == NarrativeType.Storyboard)
+        {
+            
+        }
+    }
+
+    private void TextBased()
     {
         // The first click, show second dialogue
         if (Input.GetMouseButtonDown(0) && isNarrativeFinished == 0)
@@ -49,7 +89,7 @@ public class NarrativeSampleInteraction : MonoBehaviour
     }
     
     // Load the auto-battle prototype scene
-    void LoadAutobattle()
+    private void LoadAutobattle()
     {
         SceneManager.LoadScene("Level_1");
     }
