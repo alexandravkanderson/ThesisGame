@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 210131480}
   - component: {fileID: 210131482}
   m_Layer: 5
-  m_Name: Image
+  m_Name: StoryboardImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AspectMode: 4
+  m_AspectMode: 3
   m_AspectRatio: 1.7777778
 --- !u!1 &718676963
 GameObject:
@@ -259,6 +259,8 @@ MonoBehaviour:
   narrativeType: 1
   narrativeText: {fileID: 0}
   storyboardImage: {fileID: 0}
+  sequence: []
+  currentImageIndex: 0
 --- !u!1 &783350531
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public enum NarrativeType
@@ -26,12 +27,15 @@ public class NarrativeSampleInteraction : MonoBehaviour
 
     // Storyboard
     [SerializeField] private Image storyboardImage;
+    [SerializeField] private List<Sprite> sequence;
+    [SerializeField] private int currentImageIndex = 0;
     
     // Start is called before the first frame update
     void Start()
     {
         // Wiring the game objects
         narrativeText = GameObject.Find("NarrativeText").GetComponent<TextMeshProUGUI>();
+        storyboardImage = GameObject.Find("StoryboardImage").GetComponent<Image>();
         
         // Text
         if (narrativeType == NarrativeType.TextBased)
@@ -47,7 +51,25 @@ public class NarrativeSampleInteraction : MonoBehaviour
         // Storyboard
         else if (narrativeType == NarrativeType.Storyboard)
         {
+            // Display
+            narrativeText.gameObject.SetActive(false);
+            storyboardImage.gameObject.SetActive(true);
+
+            // Loading images
+            Object[] loadedImages = Resources.LoadAll("Sprites/Storyboard", typeof(Sprite));
             
+            // Adding images to the sequence (list)
+            sequence = new List<Sprite>();
+            foreach (var image in loadedImages)
+            {
+                sequence.Add((Sprite)image);
+            }
+            
+            // Show the first image
+            if (sequence.Count > 0)
+            {
+                storyboardImage.sprite = sequence[currentImageIndex];
+            }
         }
     }
 
@@ -60,7 +82,23 @@ public class NarrativeSampleInteraction : MonoBehaviour
         }
         else if (narrativeType == NarrativeType.Storyboard)
         {
-            
+            Storyboard();
+        }
+    }
+
+    private void Storyboard()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (currentImageIndex < sequence.Count - 1)
+            {
+                currentImageIndex++;
+                storyboardImage.sprite = sequence[currentImageIndex];
+            }
+            else
+            {
+                LoadAutobattle();
+            }
         }
     }
 
