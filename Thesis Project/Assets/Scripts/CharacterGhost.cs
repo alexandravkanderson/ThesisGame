@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 public class CharacterGhost : Characters
 {
@@ -16,6 +19,10 @@ public class CharacterGhost : Characters
     [SerializeField] private bool isAttacking = false;
     [SerializeField] private ParticleSystem attactParticleSystem;
 
+    // The volume for post-processing
+    [SerializeField] private Volume globalVolume;
+    [SerializeField] private Vignette vignette;
+    
     private CharacterShell characterShell;
 
     public float playerHP
@@ -34,9 +41,16 @@ public class CharacterGhost : Characters
                 // player loses
                 GameManager.instance.isPlayerWin = false;
                 GameManager.instance.GameEnding();
+                Destroy(gameObject);
             }
             else
             {
+                if (base.HP <= 5)
+                {
+                    // Linking the HP to post processing
+                    vignette.intensity.value = Mathf.Clamp(vignette.intensity.value + 0.1f, 0, 1);
+                }
+                
                 Debug.Log("Player HP: " + base.HP);
             }
         }
@@ -48,6 +62,13 @@ public class CharacterGhost : Characters
         
         // Wiring
         gridManager = GameManager.instance.gridManager;
+        
+        globalVolume = GameObject.Find("Global Volume").GetComponent<Volume>();
+        if (globalVolume.profile.TryGet(out vignette))
+        {
+            // Set default 
+            vignette.intensity.value = 0.2f;
+        }
 
         // Player (Ghost) attributes
         playerHP = base.HP;

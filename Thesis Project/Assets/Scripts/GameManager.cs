@@ -324,7 +324,10 @@ public class GameManager : MonoBehaviour
 
             isGameEnd = true;
             
-            // Show restart
+            // Show the shop UI, Show restart
+            shopUI.SetActive(true);
+            shopUI.transform.GetChild(0).gameObject.SetActive(false);
+            shopUI.transform.GetChild(2).gameObject.SetActive(false);
             restartButton.gameObject.SetActive(true);
         }
     }

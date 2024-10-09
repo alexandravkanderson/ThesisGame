@@ -55,6 +55,8 @@ MonoBehaviour:
   moveSpeed: 2
   isAttacking: 0
   attactParticleSystem: {fileID: 0}
+  globalVolume: {fileID: 0}
+  vignette: {fileID: 0}
 --- !u!1 &6220255354481451374
 GameObject:
   m_ObjectHideFlags: 0
