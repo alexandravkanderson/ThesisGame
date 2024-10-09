@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum Item
 {
@@ -17,6 +19,8 @@ public enum Item
 ]
 public class ShopItemAttributes : ScriptableObject
 {
-    public Item ItemType;
+    public Item itemType;
     public float modifier = 1;
+    [CanBeNull] public string name;
+    [CanBeNull] public string description;
 }

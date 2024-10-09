@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e27199976219e2488551addaecd00e0, type: 3}
   m_Name: SPBooster
   m_EditorClassIdentifier: 
-  ItemType: 2
+  itemType: 0
   modifier: 1.5
+  name: SP Booster
+  description: IDK but I'm a discription

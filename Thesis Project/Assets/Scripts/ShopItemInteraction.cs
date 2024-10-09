@@ -28,6 +28,9 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler, IPoin
         descriptionHolder = transform.parent.GetChild(1).gameObject;
         description = descriptionHolder.GetComponentInChildren<TextMeshProUGUI>();
         
+        // Pulling the content of description from the scriptable object
+        description.text = shopItemPrefab.GetComponentInChildren<ShopItem>().shopItemAttributes.description;
+        
         descriptionHolder.SetActive(false);
     }
 
@@ -108,7 +111,7 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler, IPoin
         Debug.Log(itemObj.name);
         ShopItemAttributes itemAttributes = itemObj.GetComponentInChildren<ShopItem>().shopItemAttributes;
         
-        switch (itemAttributes.ItemType)
+        switch (itemAttributes.itemType)
         {
             case Item.HP:
                 // Add HP to the player
