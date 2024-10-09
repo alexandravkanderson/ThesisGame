@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 public enum NarrativeType
 {
@@ -57,10 +60,11 @@ public class NarrativeSampleInteraction : MonoBehaviour
 
             // Loading images
             Object[] loadedImages = Resources.LoadAll("Sprites/Storyboard", typeof(Sprite));
+            Object[] sortedImages = loadedImages.OrderBy(sprite => sprite.name).ToArray();
             
             // Adding images to the sequence (list)
             sequence = new List<Sprite>();
-            foreach (var image in loadedImages)
+            foreach (var image in sortedImages)
             {
                 sequence.Add((Sprite)image);
             }
