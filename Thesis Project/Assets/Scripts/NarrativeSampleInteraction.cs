@@ -32,6 +32,8 @@ public class NarrativeSampleInteraction : MonoBehaviour
     [SerializeField] private Image storyboardImage;
     [SerializeField] private List<Sprite> sequence;
     [SerializeField] private int currentImageIndex = 0;
+
+    [SerializeField] private AudioSource audioSource;
     
     // Start is called before the first frame update
     void Start()
@@ -74,6 +76,9 @@ public class NarrativeSampleInteraction : MonoBehaviour
             {
                 storyboardImage.sprite = sequence[currentImageIndex];
             }
+            
+            // Loading audio source
+            audioSource = gameObject.GetComponent<AudioSource>();
         }
     }
 
@@ -96,6 +101,17 @@ public class NarrativeSampleInteraction : MonoBehaviour
         {
             if (currentImageIndex < sequence.Count - 1)
             {
+                if (currentImageIndex == sequence.Count - 2)
+                {
+                    Debug.Log("Thunder sound!!");
+                    
+                    // Play audio
+                    if (audioSource != null)
+                    {
+                        audioSource.Play();
+                    }
+                }
+                
                 currentImageIndex++;
                 storyboardImage.sprite = sequence[currentImageIndex];
             }
