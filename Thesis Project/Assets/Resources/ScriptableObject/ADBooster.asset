@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e27199976219e2488551addaecd00e0, type: 3}
   m_Name: ADBooster
   m_EditorClassIdentifier: 
-  itemType: 0
+  itemType: 1
   modifier: 1.25
-  name: HP Booster
-  description: IDK but I'm a discription
+  name: Fortitude
+  description: Focus your mind to increase your strengh.

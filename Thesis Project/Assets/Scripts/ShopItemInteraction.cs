@@ -24,6 +24,10 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler, IPoin
         
         tagName = "ShopItem";
 
+        // Name the button
+        string name = GetComponentInChildren<TextMeshProUGUI>().text
+            = shopItemPrefab.GetComponentInChildren<ShopItem>().shopItemAttributes.name;
+        
         // Wiring the description holder and the text 
         descriptionHolder = transform.parent.GetChild(1).gameObject;
         description = descriptionHolder.GetComponentInChildren<TextMeshProUGUI>();

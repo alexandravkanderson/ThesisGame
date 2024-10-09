@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 0
   modifier: 5
-  name: HP Booster
-  description: IDK but I'm a discription
+  name: Meditate
+  description: Channel your inner zen to increase your health.
