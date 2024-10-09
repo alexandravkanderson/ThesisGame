@@ -113,8 +113,9 @@ public class GameManager : MonoBehaviour
     {
         isBattleStarted = true;
       
-        // Hide the Start button
+        // Hide the Start button and the shop
         startButton.gameObject.SetActive(false);
+        shopUI.transform.GetChild(2).gameObject.SetActive(false);
         
         // Start player (ghost) movement
         characterGhost.MoveTo(gridManager.GetGridPositionFromWorldPosition(shellPosition)); // new Vector2Int(Mathf.FloorToInt(gridWidth / 2), gridHeight - 2)

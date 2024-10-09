@@ -1,14 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler
+public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject shopItemPrefab;
     private GameObject shopItem = null;
     [SerializeField] private float zOffset;
+    
+    // For description
+    [SerializeField] private bool isHoveringOverButton;
+    [SerializeField] private GameObject descriptionHolder;
+    [SerializeField] private TextMeshProUGUI description;
     
     [SerializeField] private bool isCollidingWithGhost = false;
 
@@ -17,6 +23,12 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler
         base.Start();
         
         tagName = "ShopItem";
+
+        // Wiring the description holder and the text 
+        descriptionHolder = transform.parent.GetChild(1).gameObject;
+        description = descriptionHolder.GetComponentInChildren<TextMeshProUGUI>();
+        
+        descriptionHolder.SetActive(false);
     }
 
     protected override void Update()
@@ -28,10 +40,30 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler
         {
             isCollidingWithGhost = selectedObject.GetComponentInChildren<ShopItem>().isCollidedWithGhost;
         }
+        
+        // Monitoring if the player is hovering over the button
+        if (isHoveringOverButton)
+        {
+            descriptionHolder.SetActive(true);
+        }
+        else
+        {
+            descriptionHolder.SetActive(false);
+        }
+    }
+    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHoveringOverButton = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isHoveringOverButton = false;
     }
 
     // When the button of the shop item is down, 
-    // create an item at the mouse postion
+    // create an item at the mouse position
     public void OnPointerDown(PointerEventData eventData)
     {
         //Debug.Log("Button down");
@@ -81,16 +113,25 @@ public class ShopItemInteraction : PlayerInteraction, IPointerDownHandler
             case Item.HP:
                 // Add HP to the player
                 GameManager.instance.characterGhost.playerHP += itemAttributes.modifier;
+                
+                // Destroy the button game object
+                Destroy(gameObject);
                 break;
             case Item.AD:
                 // Boost the players attack damage point
                 GameManager.instance.characterGhost.AD *= itemAttributes.modifier;
                 Debug.Log("Player AD: " + GameManager.instance.characterGhost.AD);
+                
+                // Destroy the button game object
+                Destroy(gameObject);
                 break;
             case Item.SP:
                 // Boost the players attacking speed
                 GameManager.instance.characterGhost.SP *= itemAttributes.modifier;
                 Debug.Log("Player SP: " + GameManager.instance.characterGhost.SP);
+                
+                // Destroy the button game object
+                Destroy(gameObject);
                 break;
         }
     }
