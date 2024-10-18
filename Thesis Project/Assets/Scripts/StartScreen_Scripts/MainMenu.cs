@@ -1,3 +1,4 @@
+using Prototype_v_1_Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,14 +8,12 @@ namespace StartScreen_Scripts
     {
         public void PlayGame()
         {
-            SceneManager.LoadSceneAsync(1);
+            GameManager.instance.CurrentProgression = GameProgression.Lv0Intro;
         }
 
         public void QuitGame()
         {
             Application.Quit();
         }
-    
-    
     }
 }
