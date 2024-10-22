@@ -7,6 +7,8 @@ TagManager:
   - ShopItem
   - Ground
   - AutobattlerTrigger
+  - Shell
+  - DialogueRunner
   layers:
   - Default
   - TransparentFX

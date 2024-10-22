@@ -62,8 +62,21 @@ namespace Prototype_v_1_Scripts
             jumpTimer = 0f;
         }
 
-        // Update is called once per frame
         void Update()
+        {
+            // JUMPING 
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            {
+                isGrounded = false; // The player is no longer grounded
+                
+                jumpTimer = 0f; // Resetting the jump timer
+                
+                fallSpeed = 0f; // Resetting the fall speed
+            }
+        }
+
+        // Update is called once per frame
+        void FixedUpdate()
         {
             // ENVIRONMENTAL LEVEL
             if (controlType == ControlType.EnvironmentalLevel)
@@ -88,7 +101,7 @@ namespace Prototype_v_1_Scripts
             if (Mathf.Abs(moveX) > 0.01f)
             {
                 // Moving the player
-                Vector3 movement = new Vector3(moveX, 0, 0) * (moveSpeed * Time.deltaTime);
+                Vector3 movement = new Vector3(moveX, 0, 0) * (moveSpeed * Time.fixedDeltaTime);
             
                 // Applying the movement
                 playerRigidbody.velocity = movement;
@@ -107,18 +120,7 @@ namespace Prototype_v_1_Scripts
             
             Debug.Log("Player's velocity: " + playerRigidbody.velocity.magnitude); // For debugging purposes
             
-            // JUMPING 
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-            {
-                // Adding force to the player
-                //playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                isGrounded = false; // The player is no longer grounded
-                
-                jumpTimer = 0f; // Resetting the jump timer
-                
-                fallSpeed = 0f; // Resetting the fall speed
-            }
-
+            // JUMPING
             if (!isGrounded)
             {
                 playerRigidbody.useGravity = true;
@@ -129,12 +131,12 @@ namespace Prototype_v_1_Scripts
                     float jumpMultiplier = jumpCurve.Evaluate(jumpTimer / jumpDuration);
                     playerRigidbody.AddForce(Vector3.up * jumpForce * jumpMultiplier, ForceMode.Acceleration);
                     
-                    jumpTimer += Time.deltaTime;
+                    jumpTimer += Time.fixedDeltaTime;
                 }
                 else
                 {
                     // Increasing the fall speed
-                    fallSpeed += gravityMultiplier * Time.deltaTime;
+                    fallSpeed += gravityMultiplier * Time.fixedDeltaTime;
                     playerRigidbody.AddForce(Vector3.down * (gravity + fallSpeed), ForceMode.Acceleration);
                 }
             }
@@ -150,6 +152,15 @@ namespace Prototype_v_1_Scripts
             if (other.gameObject.CompareTag("Ground"))
             {
                 isGrounded = true;
+            }
+        }
+
+        private void OnCollisionExit(Collision other)
+        {
+            // Check if the player is grounded
+            if (other.gameObject.CompareTag("Ground"))
+            {
+                isGrounded = false;
             }
         }
 
