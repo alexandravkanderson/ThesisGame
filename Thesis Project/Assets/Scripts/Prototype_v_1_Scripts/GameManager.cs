@@ -34,6 +34,9 @@ namespace Prototype_v_1_Scripts
             }
         }
         
+        // WIRING SCRIPTS
+        [SerializeField] private CameraManager cameraManager;
+        
         // MONITORING GAME PROGRESSION
         [SerializeField] private GameProgression currentProgression;
 
@@ -52,8 +55,19 @@ namespace Prototype_v_1_Scripts
                 switch (currentProgression)
                 {
                     case GameProgression.Lv0Intro:
-                        SceneManager.LoadSceneAsync(1);
+                        SceneManager.LoadSceneAsync(1); // Load the intro level scene
                         currentProgression = GameProgression.Lv0Intro;
+                        break;
+                    
+                    case GameProgression.Lv1HeartEnvironment:
+                        PlayerController.instance.controlType = ControlType.EnvironmentalLevel; // Switch control type to environmental level
+                        break;
+                    
+                    case GameProgression.Lv1HeartAutobattler:
+                        cameraManager.StartCameraTransitionToAutobattler(); // Start camera transition to autobattler
+                        PlayerController.instance.controlType = ControlType.AutoBattler; // Switch control type to auto battler
+                        
+                        Debug.Log("Switching to AutoBattler"); // Debug
                         break;
                 }
             }
@@ -62,6 +76,9 @@ namespace Prototype_v_1_Scripts
         // Start is called before the first frame update
         void Start()
         {
+            // Wiring scripts
+            cameraManager = GetComponent<CameraManager>();
+            
             // Initializing current progression to the beginning
             currentProgression = GameProgression.MainMenu;
         }

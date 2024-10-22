@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - ShopItem
+  - Ground
+  - AutobattlerTrigger
   layers:
   - Default
   - TransparentFX
