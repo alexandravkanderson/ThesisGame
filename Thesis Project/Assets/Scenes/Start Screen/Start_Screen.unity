@@ -666,6 +666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7170ef5a9baafdf40a66830b07892a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraManager: {fileID: 0}
+  currentProgression: 0
 --- !u!4 &1092686200
 Transform:
   m_ObjectHideFlags: 0
@@ -1164,7 +1166,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6bd3af6992bd33e40ab920728e7e65da, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d650bd22efebdde4fa097b0efc64033d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
