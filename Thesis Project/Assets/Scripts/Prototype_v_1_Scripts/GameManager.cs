@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Prototype_v_1_Scripts;
 using UnityEngine.SceneManagement;
+using Yarn.Unity;
 
 namespace Prototype_v_1_Scripts
 {
@@ -35,7 +36,11 @@ namespace Prototype_v_1_Scripts
         }
         
         // WIRING SCRIPTS
-        [SerializeField] private CameraManager cameraManager;
+        public CameraManager cameraManager;
+        public GridManager gridManager;
+        
+        // YARN SPINNER
+        public DialogueRunner dialogueRunner;
         
         // MONITORING GAME PROGRESSION
         [SerializeField] private GameProgression currentProgression;
@@ -64,7 +69,7 @@ namespace Prototype_v_1_Scripts
                         break;
                     
                     case GameProgression.Lv1HeartAutobattler:
-                        cameraManager.StartCameraTransitionToAutobattler(); // Start camera transition to autobattler
+                        cameraManager.StartCameraTransitionToAutobattlerPosition(null); // Start camera transition to autobattler
                         PlayerController.instance.controlType = ControlType.AutoBattler; // Switch control type to auto battler
                         
                         Debug.Log("Switching to AutoBattler"); // Debug
@@ -78,6 +83,10 @@ namespace Prototype_v_1_Scripts
         {
             // Wiring scripts
             cameraManager = GetComponent<CameraManager>();
+            gridManager = GetComponent<GridManager>();
+            
+            // Wiring Yarn Spinner
+            dialogueRunner = FindObjectOfType<DialogueRunner>();
             
             // Initializing current progression to the beginning
             currentProgression = GameProgression.MainMenu;

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Yarn.Unity;
 
 namespace Prototype_v_1_Scripts
 {
@@ -31,7 +33,10 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private float cameraRotationTransitionDuration = 2f; // Camera ROTATION transition duration
         [SerializeField] private float playerRotationMultiplier = 0.5f; // Player rotation multiplier
 
-        private bool transitioningToAutoBattle = false; // Check if the camera is transitioning to the autobattler
+        public bool transitionToAutoBattle = false; // Check if the camera is transition-ing to the autobattler
+        
+        // YARN SPINNER
+        private DialogueRunner dialogueRunner;
 
         // Start is called before the first frame update
         void Start()
@@ -45,12 +50,15 @@ namespace Prototype_v_1_Scripts
             // Setting the player && shell transform
             playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
             shellTransform = GameObject.FindGameObjectWithTag("Shell").transform;
+            
+            // Setting the dialogue runner
+            dialogueRunner = GameManager.instance.dialogueRunner;
         }
 
         // Update is called once per frame
         void FixedUpdate()
         {
-            if (!transitioningToAutoBattle && 
+            if (!transitionToAutoBattle && 
                 cameraType == CameraType.EnvironmentalLevel)
             {
                 CameraFollowingPlayer();
@@ -67,16 +75,16 @@ namespace Prototype_v_1_Scripts
                 cameraMoveSpeed * Time.fixedDeltaTime);
         }
         
-        public void StartCameraTransitionToAutobattler()
+        public void StartCameraTransitionToAutobattlerPosition([CanBeNull] string dialogueNode)
         {
             cameraType = CameraType.AutoBattler; // Set the camera type to autobattler
-            transitioningToAutoBattle = true;
+            transitionToAutoBattle = true;
 
-            StartCoroutine(CameraTransitionToPosition());
+            StartCoroutine(CameraTransitionToPosition(dialogueNode));
         }
 
         // CAMERA TRANSITION TO THE MIDPOINT POSITION
-        private IEnumerator CameraTransitionToPosition()
+        private IEnumerator CameraTransitionToPosition([CanBeNull] string dialogueNode)
         {
             float elapsedTime = 0f; // Elapsed time
             
@@ -101,7 +109,32 @@ namespace Prototype_v_1_Scripts
             // Set the camera position to the target position
             cameraTransform.position = targetCameraPosition;
             
+            RunDialogue(dialogueNode); // Run the dialogue
+        }
+        
+        private void RunDialogue([CanBeNull] string dialogueNode)
+        {
+            // If need play the dialogue before the camera rotates
+            if (dialogueNode != null)
+            {
+                dialogueRunner.StartDialogue(dialogueNode);
+            }
+            // If not, rotate the camera to the autobattler rotation
+            else
+            {
+                StartCameraTransitionToAutobattlerRotation();
+            }
+        }
+        
+        // CAMERA TRANSITION TO THE AUTOBATTLE ROTATION
+        [YarnCommand]
+        public void StartCameraTransitionToAutobattlerRotation()
+        {
+            // Rotate the camera to the autobattler rotation
             StartCoroutine(CameraTransitionToRotation());
+            
+            // TODO: TEPORARY, GENERATE THE GRIDS
+            GameManager.instance.gridManager.CreateGrid(6, 5);
         }
         
         // CAMERA TRANSITION TO THE AUTOBATTLE ROTATION
@@ -128,8 +161,10 @@ namespace Prototype_v_1_Scripts
                 cameraTransform.rotation = Quaternion.Lerp(initialCameraRotation, targetCameraRotation,
                     elapsedTime / cameraRotationTransitionDuration);
                 
-                // Lerp the player rotation to the camera rotation
+                // Lerp the player && shell rotation to the camera rotation
                 playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, targetCameraRotation,
+                    elapsedTime / cameraRotationTransitionDuration * playerRotationMultiplier);
+                shellTransform.rotation = Quaternion.Lerp(shellTransform.rotation, targetCameraRotation,
                     elapsedTime / cameraRotationTransitionDuration * playerRotationMultiplier);
 
                 yield return null; // Wait for the next frame
@@ -142,8 +177,9 @@ namespace Prototype_v_1_Scripts
             // Set the player rotation to the target rotation
             playerTransform.rotation = targetCameraRotation;
 
-            transitioningToAutoBattle = false; // Reset transitioning to autobattler to false
+            transitionToAutoBattle = false; // Reset transitioning to autobattler to false
         }
+        
         // NOTE: DONOT TOUCH, OLD VERSION CODE
         /*private IEnumerator CameraTransitionToAutobattler()
         {

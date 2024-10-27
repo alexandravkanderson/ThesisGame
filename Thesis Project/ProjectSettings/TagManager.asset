@@ -9,6 +9,7 @@ TagManager:
   - AutobattlerTrigger
   - Shell
   - DialogueRunner
+  - Interactable
   layers:
   - Default
   - TransparentFX

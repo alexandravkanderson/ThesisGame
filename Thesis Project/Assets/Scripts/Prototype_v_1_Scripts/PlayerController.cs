@@ -25,8 +25,11 @@ namespace Prototype_v_1_Scripts
             }
         }
         
+        // Camera
+        private CameraManager cameraManager;
+        
         // PLAYER COMPONENTS
-        [SerializeField] private Transform playerTransform;
+        public Transform playerTransform;
         [SerializeField] private Rigidbody playerRigidbody;
         
         // PLAYER CONTROL TYPE
@@ -46,12 +49,22 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private float gravityMultiplier = 2f;
         
         [SerializeField] private bool isGrounded;       // Check if the player is grounded
+        
+        [SerializeField] private bool isInteractable;    // Check if the player is available for interacting with an object
+        
+        // AUTOBATTLER MOVEMENT
+        
+        
+        private bool isDragging = false;
 
         // Start is called before the first frame update
         void Start()
         {
             // Initializing the controller as environmental level
             controlType = ControlType.EnvironmentalLevel;
+            
+            // Camera
+            cameraManager = GameManager.instance.gameObject.GetComponent<CameraManager>();
             
             // Initializing the player components
             playerTransform = GetComponent<Transform>();
@@ -64,14 +77,37 @@ namespace Prototype_v_1_Scripts
 
         void Update()
         {
-            // JUMPING 
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            if (!cameraManager.transitionToAutoBattle &&
+                controlType == ControlType.EnvironmentalLevel)
             {
-                isGrounded = false; // The player is no longer grounded
+                // JUMPING 
+                if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+                {
+                    isGrounded = false; // The player is no longer grounded
                 
-                jumpTimer = 0f; // Resetting the jump timer
+                    jumpTimer = 0f; // Resetting the jump timer
                 
-                fallSpeed = 0f; // Resetting the fall speed
+                    fallSpeed = 0f; // Resetting the fall speed
+                }
+            
+                // INTERACTABLE OBJECT
+                if (isInteractable)
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit hit;
+
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            if (hit.transform.CompareTag("Interactable"))
+                            {
+                                Debug.Log("Interactable object is clicked");
+                                Destroy(hit.transform.parent.gameObject);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -79,14 +115,16 @@ namespace Prototype_v_1_Scripts
         void FixedUpdate()
         {
             // ENVIRONMENTAL LEVEL
-            if (controlType == ControlType.EnvironmentalLevel)
+            if (!cameraManager.transitionToAutoBattle &&
+                controlType == ControlType.EnvironmentalLevel)
             {
                 EnvironmentalLevelController();
             }
             // AUTOBATTLER
-            else if (controlType == ControlType.AutoBattler)
+            else if (!cameraManager.transitionToAutoBattle &&
+                     controlType == ControlType.AutoBattler)
             {
-                
+                AutoBattlerController();
             }
         }
         
@@ -118,7 +156,7 @@ namespace Prototype_v_1_Scripts
                 playerRigidbody.velocity = Vector3.zero;
             }
             
-            Debug.Log("Player's velocity: " + playerRigidbody.velocity.magnitude); // For debugging purposes
+            //Debug.Log("Player's velocity: " + playerRigidbody.velocity.magnitude); // For debugging purposes
             
             // JUMPING
             if (!isGrounded)
@@ -145,7 +183,7 @@ namespace Prototype_v_1_Scripts
                 playerRigidbody.useGravity = false;
             }
         }
-
+        
         private void OnCollisionEnter(Collision other)
         {
             // Check if the player is grounded
@@ -166,12 +204,91 @@ namespace Prototype_v_1_Scripts
 
         private void OnTriggerEnter(Collider other)
         {
-            // Check if the player enters the autobattler trigger
-            if (other.gameObject.CompareTag("AutobattlerTrigger"))
+            switch (other.gameObject.tag)
             {
-                playerRigidbody.velocity = Vector3.zero; // Stop the player's movement
-                GameManager.instance.CurrentProgression = GameProgression.Lv1HeartAutobattler;
+                // Check if the player enters the autobattler trigger
+                case "AutobattlerTrigger":
+                    other.gameObject.SetActive(false); // Deactivate the trigger
+                
+                    playerRigidbody.velocity = Vector3.zero; // Stop the player's movement
+                    GameManager.instance.CurrentProgression = GameProgression.Lv1HeartAutobattler; // Switch to autobattler
+                    break;
+                
+                // Interactable object
+                case "Interactable":
+                    isInteractable = true;
+                    break;
             }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            switch (other.gameObject.tag)
+            {
+                case "Interactable":
+                    isInteractable = false;
+                    break;
+            }
+        }
+        
+        // AUTOBATTLER MOVEMENT
+        private void AutoBattlerController()
+        {
+            // Stopping the player
+            playerRigidbody.velocity = Vector3.zero;
+            
+            
+        }
+        
+        // TODO: FIX DRAGGING OBJECT
+        private void MouseDrag()
+        {
+            // If player clicks on the player object
+            if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform == playerTransform)
+                    {
+                        Debug.Log("Player is clicked");
+                        isDragging = true;
+                    }
+                }
+            }
+            
+            // If player release the mouse button
+            if (Input.GetMouseButtonUp(0))
+            {
+                isDragging = false;
+                SnapPlayerToGrid();
+            }
+            
+            // If player is dragging the player object
+            if (isDragging)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                Plane plane = new Plane(Vector3.up, Vector3.zero); // Restrict movement to X-Z plane
+                
+                float distance;
+                
+                if (plane.Raycast(ray, out distance))
+                {
+                    Vector3 targetPosition = ray.GetPoint(distance);
+                    targetPosition.y = playerTransform.position.y; // Keep the player's Y position
+                    
+                    playerTransform.position = targetPosition;
+                }
+            }
+        }
+        
+        public void SnapPlayerToGrid()
+        {
+            Vector2Int gridPos = GameManager.instance.gridManager.GetGridPositionFromWorldPosition(playerTransform.position);
+            Vector3 snappedPosition = GameManager.instance.gridManager.GetWorldPositionFromGridPosition(gridPos.x, gridPos.y);
+            playerTransform.position = snappedPosition;
         }
     }
 }
