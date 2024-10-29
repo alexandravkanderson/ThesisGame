@@ -3,3 +3,10 @@ tags:
 ---
 
 ===
+
+title: Environmental_Level_TestDialogue
+---
+Character: Test line 0.
+Bird: Test line 1.
+<<StartCameraTransitionToAutobattlerRotation ManagerHolder>>
+===

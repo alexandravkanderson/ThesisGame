@@ -69,7 +69,8 @@ namespace Prototype_v_1_Scripts
                         break;
                     
                     case GameProgression.Lv1HeartAutobattler:
-                        cameraManager.StartCameraTransitionToAutobattlerPosition(null); // Start camera transition to autobattler
+                        /*cameraManager.StartCameraTransitionToAutobattlerPosition(null); // Start camera transition to autobattler WITH NULL DIALOGUE CASE*/
+                        cameraManager.StartCameraTransitionToAutobattlerPosition("Environmental_Level_TestDialogue"); // Start camera transition to autobattler
                         PlayerController.instance.controlType = ControlType.AutoBattler; // Switch control type to auto battler
                         
                         Debug.Log("Switching to AutoBattler"); // Debug

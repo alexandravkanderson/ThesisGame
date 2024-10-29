@@ -53,6 +53,9 @@ namespace Prototype_v_1_Scripts
             
             // Setting the dialogue runner
             dialogueRunner = GameManager.instance.dialogueRunner;
+            
+            // TEST DEBUG AREA, DONOT TOUCH
+            //dialogueRunner.AddCommandHandler("StartCameraTransitionToAutobattlerRotation", StartCameraTransitionToAutobattlerRotation);
         }
 
         // Update is called once per frame
@@ -127,7 +130,7 @@ namespace Prototype_v_1_Scripts
         }
         
         // CAMERA TRANSITION TO THE AUTOBATTLE ROTATION
-        [YarnCommand]
+        [YarnCommand("StartCameraTransitionToAutobattlerRotation")]
         public void StartCameraTransitionToAutobattlerRotation()
         {
             // Rotate the camera to the autobattler rotation
