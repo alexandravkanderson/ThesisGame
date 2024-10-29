@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Prototype_v_1_Scripts;
+using UnityEngine.Serialization;
 
 namespace Prototype_v_1_Scripts
 {
@@ -36,7 +37,7 @@ namespace Prototype_v_1_Scripts
         public ControlType controlType;
         
         // WASD MOVEMENT -- ENVIRONMENTAL LEVEL
-        [SerializeField] private float moveSpeed = 5f;  // Movement speed
+        [SerializeField] private float moveSpeedEL = 5f;  // Movement speed
         [SerializeField] private float maxSpeed = 10f;  // Maximum speed
         
         [SerializeField] private float jumpForce = 5f;  // Jump force
@@ -53,8 +54,12 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private bool isInteractable;    // Check if the player is available for interacting with an object
         
         // AUTOBATTLER MOVEMENT
+        [SerializeField] private float moveSpeedAB = 10f;  // Movement speed
+        [SerializeField] private AnimationCurve moveCurve; // Movement curve
         
+        [SerializeField] private bool isMoving = false; // Check if the player is moving across the grid
         
+        // AUTOBATTLER DRAG N DROP
         private bool isDragging = false;
 
         // Start is called before the first frame update
@@ -67,7 +72,7 @@ namespace Prototype_v_1_Scripts
             cameraManager = GameManager.instance.gameObject.GetComponent<CameraManager>();
             
             // Initializing the player components
-            playerTransform = GetComponent<Transform>();
+            playerTransform = transform;
             playerRigidbody = GetComponent<Rigidbody>();
             
             // Initializing the player's status
@@ -109,6 +114,15 @@ namespace Prototype_v_1_Scripts
                     }
                 }
             }
+            
+            /*if (!cameraManager.transitionToAutoBattle &&
+                controlType == ControlType.AutoBattler)
+            {
+                if (!isMoving) // Check if the player is moving across the grid
+                {
+                    AutoBattlerController();
+                }
+            }*/
         }
 
         // Update is called once per frame
@@ -124,7 +138,10 @@ namespace Prototype_v_1_Scripts
             else if (!cameraManager.transitionToAutoBattle &&
                      controlType == ControlType.AutoBattler)
             {
-                AutoBattlerController();
+                if (!isMoving) // Check if the player is moving across the grid
+                {
+                    AutoBattlerController();
+                }
             }
         }
         
@@ -139,7 +156,7 @@ namespace Prototype_v_1_Scripts
             if (Mathf.Abs(moveX) > 0.01f)
             {
                 // Moving the player
-                Vector3 movement = new Vector3(moveX, 0, 0) * (moveSpeed * Time.fixedDeltaTime);
+                Vector3 movement = new Vector3(moveX, 0, 0) * (moveSpeedEL * Time.fixedDeltaTime);
             
                 // Applying the movement
                 playerRigidbody.velocity = movement;
@@ -237,10 +254,59 @@ namespace Prototype_v_1_Scripts
             // Stopping the player
             playerRigidbody.velocity = Vector3.zero;
             
+            // Reset
+            Vector3 moveDirection = Vector3.zero;
             
+            // Getting the player's input
+            if (Input.GetKey(KeyCode.W)) moveDirection += Vector3.forward;
+            if (Input.GetKey(KeyCode.S)) moveDirection += Vector3.back;
+            if (Input.GetKey(KeyCode.A)) moveDirection += Vector3.left;
+            if (Input.GetKey(KeyCode.D)) moveDirection += Vector3.right;
+            
+            // Check if there is any input
+            if (moveDirection != Vector3.zero)
+            {
+                Vector3 targetPosition = 
+                    playerTransform.position + moveDirection.normalized * GameManager.instance.gridManager.gridCellSize;
+                Vector2Int targetGridPosition = 
+                    GameManager.instance.gridManager.GetGridPositionFromWorldPosition(targetPosition);
+
+                if (GameManager.instance.gridManager.IsWithinWalkableArea(targetGridPosition))
+                {
+                    // Move the player to the target position
+                    StartCoroutine(MoveToPosition(targetPosition));
+                }
+            }
+        }
+
+        private IEnumerator MoveToPosition(Vector3 targetPosition)
+        {
+            isMoving = true; // Set the player to be moving
+            
+            Vector3 startPosition = transform.position; // Get the player's current position
+            
+            float elapsedTime = 0f;
+            float duration = 1f / moveSpeedAB; // Calculate the duration based on the movement speed
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.fixedDeltaTime; // Increment the elapsed time
+                /*elapsedTime += Time.deltaTime; // Increment the elapsed time*/
+                
+                float t = elapsedTime / duration;   // Calculate the progress of the current time
+                float curveT = moveCurve.Evaluate(t);  // Evaluate the movement curve
+                
+                // Lerp the player's position
+                transform.position = Vector3.Lerp(startPosition, targetPosition, curveT); 
+                yield return null; // Wait for the next frame
+            }
+            
+            // Set the player's position to the target position after the movement is done
+            transform.position = targetPosition; 
+            isMoving = false; // Reset
         }
         
-        // TODO: FIX DRAGGING OBJECT
+        // TODO: CODE OF DRAGGING OBJECT, NEED TO BE FIXED
         private void MouseDrag()
         {
             // If player clicks on the player object

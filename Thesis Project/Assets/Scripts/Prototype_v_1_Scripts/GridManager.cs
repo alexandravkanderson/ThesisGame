@@ -12,11 +12,17 @@ namespace Prototype_v_1_Scripts
         public float gridCellSize = 1.0f;
 
         // GRID
+        public int gridWidth;
+        public int gridHeight;
+        
         public GameObject[,] grid;
         private GameObject gridHolder;
         
+        private Vector3 gridOrigin; // Origin of the grid, relative to the player
+        
         // PLAYER
         [SerializeField]   private Transform playerTransform;
+        
         // Default grid offset to place the player at certain position
         private Vector2Int defaultPlayerGridPosition = new Vector2Int(1, 2); // Third row, second column
         
@@ -44,6 +50,10 @@ namespace Prototype_v_1_Scripts
         public void CreateGrid(int gridWidth, int gridHeight, 
                                int? playerGridPosX = null, int? playerGridPosY = null, float? groundLevelY = null)
         {
+            // Set the grid width and height
+            this.gridWidth = gridWidth;
+            this.gridHeight = gridHeight;
+            
             // Set the default player position if not provided
             playerGridPosX ??= defaultPlayerGridPosition.x;
             playerGridPosY ??= defaultPlayerGridPosition.y;
@@ -53,7 +63,7 @@ namespace Prototype_v_1_Scripts
             grid = new GameObject[gridWidth, gridHeight]; // Initialize the grid array
             
             // Calculate the world position offset based on player's position
-            Vector3 gridOrigin = GetGridOriginForPlayerPosition(playerGridPosX.Value, playerGridPosY.Value, groundLevelY.Value);
+            gridOrigin = GetGridOriginForPlayerPosition(playerGridPosX.Value, playerGridPosY.Value, groundLevelY.Value);
             
             // Create the grid
             for (int x = 0; x < gridWidth; x++)
@@ -61,7 +71,7 @@ namespace Prototype_v_1_Scripts
                 for (int y = 0; y < gridHeight; y++)
                 {
                     // Calculate the world position for each cell
-                    Vector3 cellPosition = gridOrigin + GetWorldPositionFromGridPosition(x, y); // Calculate the position for each cell
+                    Vector3 cellPosition = GetWorldPositionFromGridPosition(x, y); // Calculate the position for each cell (gridOrigin included)
                     
                     // Instantiate the cell, and assign the parent
                     GameObject newCell = Instantiate(gridCellPrefab, cellPosition, Quaternion.identity) as GameObject; // Instantiate the cell
@@ -90,12 +100,20 @@ namespace Prototype_v_1_Scripts
         
         public Vector3 GetWorldPositionFromGridPosition(int x, int y)
         {
-            return new Vector3(x * gridCellSize, 0, y * gridCellSize);
+            return gridOrigin + new Vector3(x * gridCellSize, 0, y * gridCellSize);
         }
         
         public Vector2Int GetGridPositionFromWorldPosition(Vector3 worldPosition)
         {
-            return new Vector2Int(Mathf.FloorToInt(worldPosition.x / gridCellSize), Mathf.FloorToInt(worldPosition.z / gridCellSize));
+            // Subtract gridOrigin before converting to grid coordinates
+            Vector3 offsetPosition = worldPosition - gridOrigin;
+            return new Vector2Int(Mathf.FloorToInt(offsetPosition.x / gridCellSize), Mathf.FloorToInt(offsetPosition.z / gridCellSize));
+        }
+
+        public bool IsWithinWalkableArea(Vector2Int gridPos)
+        {
+            return gridPos.x >= 0 && gridPos.x < gridWidth / 2 && 
+                   gridPos.y >= 0 && gridPos.y < gridHeight;
         }
     }
 }

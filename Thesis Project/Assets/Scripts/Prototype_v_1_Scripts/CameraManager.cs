@@ -179,47 +179,6 @@ namespace Prototype_v_1_Scripts
 
             transitionToAutoBattle = false; // Reset transitioning to autobattler to false
         }
-        
-        // NOTE: DONOT TOUCH, OLD VERSION CODE
-        /*private IEnumerator CameraTransitionToAutobattler()
-        {
-            float elapsedTime = 0f; // Elapsed time
-
-            // Get initial camera position and rotation
-            Vector3 initialCameraPosition = cameraTransform.position;
-            Quaternion initialCameraRotation = cameraTransform.rotation;
-
-            Vector3 targetCameraPosition =
-                initialCameraPosition + cameraPositionOffset; // Calculate target camera position
-            Quaternion targetCameraRotation =
-                Quaternion.Euler(cameraRotationOffset) * initialCameraRotation; // Calculate target camera rotation
-
-            while (elapsedTime < cameraTransitionDuration)
-            {
-                elapsedTime += Time.fixedDeltaTime; // Increment elapsed time
-
-                // Lerp the camera position and rotation
-                cameraTransform.position = Vector3.Lerp(initialCameraPosition, targetCameraPosition,
-                    elapsedTime / cameraTransitionDuration);
-                cameraTransform.rotation = Quaternion.Lerp(initialCameraRotation, targetCameraRotation,
-                    elapsedTime / cameraTransitionDuration);
-                
-                // Lerp the player rotation to the camera rotation
-                playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, targetCameraRotation,
-                    elapsedTime / cameraTransitionDuration * playerRotationMultiplier);
-
-                yield return null; // Wait for the next frame
-            }
-
-            // Set the camera position and rotation to the target position and rotation
-            cameraTransform.position = targetCameraPosition;
-            cameraTransform.rotation = targetCameraRotation;
-            
-            // Set the player rotation to the target rotation
-            playerTransform.rotation = targetCameraRotation;
-
-            transitioningToAutoBattle = false; // Reset transitioning to autobattler to false
-        }*/
     }
 
 }
