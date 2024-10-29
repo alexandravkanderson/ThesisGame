@@ -20,8 +20,11 @@ namespace Prototype_v_1_Scripts
         
         private Vector3 gridOrigin; // Origin of the grid, relative to the player
         
+        public Material cellMaterialDefault;
+        public Material cellMaterialOccupied;
+        
         // PLAYER
-        [SerializeField]   private Transform playerTransform;
+        [SerializeField] private Transform playerTransform;
         
         // Default grid offset to place the player at certain position
         private Vector2Int defaultPlayerGridPosition = new Vector2Int(1, 2); // Third row, second column
@@ -38,6 +41,10 @@ namespace Prototype_v_1_Scripts
             // Create the holder for all cells
             gridHolder = new GameObject("Grid");
             gridHolder.transform.position = playerTransform.position; // Set the position to the origin
+            
+            // Materials
+            cellMaterialDefault = Resources.Load<Material>("Prototype_v_1_Resources/Materials/CellDefault");
+            cellMaterialOccupied = Resources.Load<Material>("Prototype_v_1_Resources/Materials/CellOccupied");
         }
 
         // Update is called once per frame
@@ -81,6 +88,10 @@ namespace Prototype_v_1_Scripts
                     grid[x, y] = newCell; // Store the cell in the grid array
                 }
             }
+            
+            // Set the player's cell to occupied material
+            SetGridCellMaterial(new Vector2Int(playerGridPosX.Value, playerGridPosY.Value), cellMaterialOccupied);
+            playerTransform.GetComponent<PlayerController>().currentGridPosition = new Vector2Int(playerGridPosX.Value, playerGridPosY.Value);
         }
         
         private Vector3 GetGridOriginForPlayerPosition(int playerGridPosX, int playerGridPosY, float groundLevelY)
@@ -114,6 +125,20 @@ namespace Prototype_v_1_Scripts
         {
             return gridPos.x >= 0 && gridPos.x < gridWidth / 2 && 
                    gridPos.y >= 0 && gridPos.y < gridHeight;
+        }
+
+        public void SetGridCellMaterial(Vector2Int gridPosition, Material material)
+        {
+            if (grid[gridPosition.x, gridPosition.y] != null)
+            {
+                Renderer cellRenderer = grid[gridPosition.x, gridPosition.y].GetComponent<Renderer>();
+                
+                // Set the material
+                if (cellRenderer != null)
+                {
+                    cellRenderer.material = material;
+                }
+            }
         }
     }
 }

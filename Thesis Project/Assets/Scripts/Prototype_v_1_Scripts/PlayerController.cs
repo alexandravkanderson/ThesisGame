@@ -57,6 +57,8 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private float moveSpeedAB = 10f;  // Movement speed
         [SerializeField] private AnimationCurve moveCurve; // Movement curve
         
+        public Vector2Int currentGridPosition; // Current grid position
+        
         [SerializeField] private bool isMoving = false; // Check if the player is moving across the grid
         
         // AUTOBATTLER DRAG N DROP
@@ -274,12 +276,12 @@ namespace Prototype_v_1_Scripts
                 if (GameManager.instance.gridManager.IsWithinWalkableArea(targetGridPosition))
                 {
                     // Move the player to the target position
-                    StartCoroutine(MoveToPosition(targetPosition));
+                    StartCoroutine(MoveToPosition(targetPosition, targetGridPosition));
                 }
             }
         }
 
-        private IEnumerator MoveToPosition(Vector3 targetPosition)
+        private IEnumerator MoveToPosition(Vector3 targetPosition, Vector2Int newGridPosition)
         {
             isMoving = true; // Set the player to be moving
             
@@ -303,6 +305,13 @@ namespace Prototype_v_1_Scripts
             
             // Set the player's position to the target position after the movement is done
             transform.position = targetPosition; 
+            
+            // Set materials
+            GameManager.instance.gridManager.SetGridCellMaterial(currentGridPosition, GameManager.instance.gridManager.cellMaterialDefault);
+            GameManager.instance.gridManager.SetGridCellMaterial(newGridPosition, GameManager.instance.gridManager.cellMaterialOccupied);
+            
+            currentGridPosition = newGridPosition; // Update the current grid position
+            
             isMoving = false; // Reset
         }
         
