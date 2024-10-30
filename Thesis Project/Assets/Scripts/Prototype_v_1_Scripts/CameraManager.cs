@@ -136,8 +136,11 @@ namespace Prototype_v_1_Scripts
             // Rotate the camera to the autobattler rotation
             StartCoroutine(CameraTransitionToRotation());
             
-            // TODO: TEPORARY, GENERATE THE GRIDS
+            // TODO: TEMPORARY, GENERATE THE GRIDS
             GameManager.instance.gridManager.CreateGrid(6, 5);
+            
+            // TODO: PULL UP THE SHOP UI
+            GameManager.instance.shopManager.ToggleDrawer();
         }
         
         // CAMERA TRANSITION TO THE AUTOBATTLE ROTATION

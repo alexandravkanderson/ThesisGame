@@ -38,6 +38,7 @@ namespace Prototype_v_1_Scripts
         // WIRING SCRIPTS
         public CameraManager cameraManager;
         public GridManager gridManager;
+        public ShopManager shopManager;
         
         // YARN SPINNER
         public DialogueRunner dialogueRunner;
@@ -85,6 +86,7 @@ namespace Prototype_v_1_Scripts
             // Wiring scripts
             cameraManager = GetComponent<CameraManager>();
             gridManager = GetComponent<GridManager>();
+            shopManager = GetComponent<ShopManager>();
             
             // Wiring Yarn Spinner
             dialogueRunner = FindObjectOfType<DialogueRunner>();
