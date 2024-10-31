@@ -1,4 +1,5 @@
 using UnityEngine;
+using Prototype_v_0_Scripts;
 
 namespace Prototype_v_0_Scripts
 {
