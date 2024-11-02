@@ -590,6 +590,11 @@ MonoBehaviour:
     type: 2}
   shopItemPrefab: {fileID: 3176377160328608133, guid: 0ad28af3f7080814e91d2023a5ba6dc3,
     type: 3}
+  itemImagePrefab: {fileID: 0}
+  itemImage: {fileID: 1189199463372867312, guid: fcf70e015fd9b05418507a5dc29df59b,
+    type: 3}
+  itemImageFollowingSpeed: 25
+  isItemImageFollowing: 0
   zOffset: 5.5
   isDragging: 0
 --- !u!1 &294959248
@@ -1460,6 +1465,7 @@ MonoBehaviour:
   cameraManager: {fileID: 0}
   gridManager: {fileID: 0}
   shopManager: {fileID: 0}
+  HUD: {fileID: 0}
   cameraRotation: {x: 50, y: 0, z: 0}
   dialogueRunner: {fileID: 0}
   currentProgression: 0

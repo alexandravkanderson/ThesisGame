@@ -18,10 +18,7 @@ namespace Prototype_v_1_Scripts
 
         public bool isDrawerExpanded = false;
         public bool isDrawerMoving = false;
-
-        // 
         
-
         // Start is called before the first frame update
         void Start()
         {

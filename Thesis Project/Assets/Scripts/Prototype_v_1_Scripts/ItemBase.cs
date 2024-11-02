@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Prototype_v_1_Scripts;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Prototype_v_1_Scripts
 {
@@ -11,6 +13,12 @@ namespace Prototype_v_1_Scripts
         // VARIABLES
         [SerializeField] private ShopItemScriptableObject shopItemScriptableObject;
         [SerializeField] private GameObject shopItemPrefab;
+        
+        [SerializeField] private Image itemImagePrefab;
+        [SerializeField] private Image itemImage;
+        
+        [SerializeField] private float itemImageFollowingSpeed = 10f;
+        [SerializeField] private bool isItemImageFollowing;
 
         public float zOffset;
 
@@ -24,7 +32,7 @@ namespace Prototype_v_1_Scripts
         // Start is called before the first frame update
         void Start()
         {
-            
+            itemImagePrefab = Resources.Load<Image>("Prototype_v_1_Resources/Prefabs/ItemImage");
         }
 
         // Update is called once per frame
@@ -34,6 +42,14 @@ namespace Prototype_v_1_Scripts
             if (PlayerController.instance.controlType == ControlType.AutoBattler)
             {
                 ItemDragAndDrop();
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    isDragging = false;
+                    isItemImageFollowing = false;
+                    
+                    // Destroy the item image
+                }
             }
         }
 
@@ -49,8 +65,11 @@ namespace Prototype_v_1_Scripts
                 mousePosition.z = zOffset;
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
                 
-                // Instantiate the item
+                // Instantiate the item in the world space
                 selectedItem = Instantiate(shopItemPrefab, worldPosition, Quaternion.Euler(GameManager.instance.cameraRotation));
+                
+                // Create the item image on the UI canvas
+                CreateItemImage();
                 
                 // Enable dragging for the instantiated item
                 isDragging = true;
@@ -62,24 +81,41 @@ namespace Prototype_v_1_Scripts
                 dragOffset = selectedItem.transform.position - worldPosition;
             }
         }
+
+        // CREATE THE ITEM IMAGE ON THE UI CANVAS (FOR DISPLAY ONLY)
+        private void CreateItemImage()
+        {
+            itemImage = Instantiate(itemImagePrefab, GameManager.instance.HUD.transform);
+            itemImage.sprite = shopItemScriptableObject.itemSprite;
+            
+            itemImage.transform.position = Input.mousePosition; // Set the position of the item image to the mouse position
+            
+            isItemImageFollowing = true; // Enable the item image following
+        }
         
-        // DRAG AND DROP THE ITEM --
+        // BUTTON STAY: DRAG AND DROP THE ITEM (3D GAME OBJECT IN THE WORLD SPACE) --
         // PRESS: PURCHASE; DRAG: MOVE; RELEASE: PLACE
         private void ItemDragAndDrop()
         {
             // CLICK
             //ItemClick();
             
-            // DRAGGING
+            // DRAGGING THE 3D GAME OBJECT
             if (Input.GetMouseButton(0)
                 && isDragging
                 && selectedItem != null)
             {
                 ItemDragging();
             }
+            
+            // DRAGGING THE ITEM IMAGE (IMAGE FOLLOWING THE MOUSE IN THE UI CANVAS)
+            if (isItemImageFollowing)
+            {
+                ItemImageFollowing();
+            }
         }
         
-        // DRAGGING THE ITEM
+        // DRAGGING THE ITEM 3D GAME OBJECT IN THE WORLD SPACE
         private void ItemDragging()
         {
             // Cast a ray, from the camera to the mouse position
@@ -102,6 +138,17 @@ namespace Prototype_v_1_Scripts
                     selectedItem.transform.position.y, 
                     point.z + dragOffset.z);
             }
+        }
+        
+        // DRAGGING THE ITEM IMAGE (IMAGE FOLLOWING THE MOUSE IN THE UI CANVAS)
+        private void ItemImageFollowing()
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            
+            itemImage.transform.position = Vector3.Lerp(
+                itemImage.transform.position, 
+                mousePosition, 
+                itemImageFollowingSpeed * Time.deltaTime);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

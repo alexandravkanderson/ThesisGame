@@ -40,6 +40,9 @@ namespace Prototype_v_1_Scripts
         public GridManager gridManager;
         public ShopManager shopManager;
         
+        // UI
+        public GameObject HUD;
+        
         // CAMERA
         public Vector3 cameraRotation = new Vector3(45f, 0f, 0f); // Camera rotation angle
         
@@ -90,6 +93,9 @@ namespace Prototype_v_1_Scripts
             cameraManager = GetComponent<CameraManager>();
             gridManager = GetComponent<GridManager>();
             shopManager = GetComponent<ShopManager>();
+            
+            // UI
+            HUD = GameObject.Find("HUDCanvas");
             
             // Wiring Yarn Spinner
             dialogueRunner = FindObjectOfType<DialogueRunner>();

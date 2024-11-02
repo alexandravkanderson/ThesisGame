@@ -26,5 +26,7 @@ namespace Prototype_v_1_Scripts
         
         public string itemName;
         public string description;
+        
+        public Sprite itemSprite;
     }
 }
