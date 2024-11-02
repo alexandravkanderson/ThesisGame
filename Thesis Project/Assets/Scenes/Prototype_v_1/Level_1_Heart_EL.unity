@@ -590,7 +590,8 @@ MonoBehaviour:
     type: 2}
   shopItemPrefab: {fileID: 3176377160328608133, guid: 0ad28af3f7080814e91d2023a5ba6dc3,
     type: 3}
-  zOffset: 6
+  zOffset: 5.5
+  isDragging: 0
 --- !u!1 &294959248
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,7 +1441,6 @@ MonoBehaviour:
   cameraMoveSpeed: 5
   cameraOffset: {x: 0, y: 0.5, z: -6}
   cameraPositionTransitionOffset: {x: 0, y: 5, z: 1}
-  cameraRotationTransitionOffset: {x: 45, y: 0, z: 0}
   cameraPositionTransitionDuration: 5
   cameraRotationTransitionDuration: 6
   playerRotationMultiplier: 0.019
@@ -1460,6 +1460,7 @@ MonoBehaviour:
   cameraManager: {fileID: 0}
   gridManager: {fileID: 0}
   shopManager: {fileID: 0}
+  cameraRotation: {x: 50, y: 0, z: 0}
   dialogueRunner: {fileID: 0}
   currentProgression: 0
 --- !u!114 &805559216

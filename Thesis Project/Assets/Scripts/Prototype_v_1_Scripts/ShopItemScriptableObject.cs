@@ -19,7 +19,7 @@ namespace Prototype_v_1_Scripts
             order = 0)
     ]
     
-    public class ShopItem : ScriptableObject
+    public class ShopItemScriptableObject : ScriptableObject
     {
         /*public Item itemType;
         public float modifier = 1;*/

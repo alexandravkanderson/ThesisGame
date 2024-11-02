@@ -40,6 +40,9 @@ namespace Prototype_v_1_Scripts
         public GridManager gridManager;
         public ShopManager shopManager;
         
+        // CAMERA
+        public Vector3 cameraRotation = new Vector3(45f, 0f, 0f); // Camera rotation angle
+        
         // YARN SPINNER
         public DialogueRunner dialogueRunner;
         

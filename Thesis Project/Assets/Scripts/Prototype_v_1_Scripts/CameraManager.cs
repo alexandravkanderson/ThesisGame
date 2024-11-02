@@ -28,7 +28,8 @@ namespace Prototype_v_1_Scripts
 
         // CAMERA TRANSITION TO AUTOBATTLER
         [SerializeField] private Vector3 cameraPositionTransitionOffset = new Vector3(0f, 5f, 1f); // Camera position offset
-        [SerializeField] private Vector3 cameraRotationTransitionOffset = new Vector3(45f, 0f, 0f); // Camera rotation offset
+        //[SerializeField] private Vector3 cameraRotationTransitionOffset = new Vector3(45f, 0f, 0f); // Camera rotation offset
+        /*[SerializeField]*/ private Vector3 cameraRotationTransitionOffset; // Camera rotation offset
         [SerializeField] private float cameraPositionTransitionDuration = 2f; // Camera POSITION transition duration
         [SerializeField] private float cameraRotationTransitionDuration = 2f; // Camera ROTATION transition duration
         [SerializeField] private float playerRotationMultiplier = 0.5f; // Player rotation multiplier
@@ -53,6 +54,9 @@ namespace Prototype_v_1_Scripts
             
             // Setting the dialogue runner
             dialogueRunner = GameManager.instance.dialogueRunner;
+            
+            // Setting the camera rotation transition offset
+            cameraRotationTransitionOffset = GameManager.instance.cameraRotation;
             
             // TEST DEBUG AREA, DONOT TOUCH
             //dialogueRunner.AddCommandHandler("StartCameraTransitionToAutobattlerRotation", StartCameraTransitionToAutobattlerRotation);

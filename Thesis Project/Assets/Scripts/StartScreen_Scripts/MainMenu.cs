@@ -9,6 +9,7 @@ namespace StartScreen_Scripts
         public void PlayGame()
         {
             GameManager.instance.CurrentProgression = GameProgression.Lv0Intro;
+            /*SceneManager.LoadScene("Level_0");*/
         }
 
         public void QuitGame()
