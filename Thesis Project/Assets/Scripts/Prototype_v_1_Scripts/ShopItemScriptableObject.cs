@@ -2,21 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Prototype_v_1_Scripts;
+using UnityEngine.Serialization;
 
 namespace Prototype_v_1_Scripts
 {
-    public enum Item
-    {
-        HP,
-        AD,
-        SP
-    }
-    
     [CreateAssetMenu
         (
-            fileName = "New Item",
+            fileName = "New Shop Item",
             menuName = "Shop Item",
-            order = 0)
+            order = 1)
     ]
     
     public class ShopItemScriptableObject : ScriptableObject
@@ -24,9 +18,11 @@ namespace Prototype_v_1_Scripts
         /*public Item itemType;
         public float modifier = 1;*/
         
-        public string itemName;
-        public string description;
+        public string shopItemName;
+        public string shopItemDescription;
         
-        public Sprite itemSprite;
+        public Sprite shopItemSprite;
+        
+        public string requiredCurrency;
     }
 }

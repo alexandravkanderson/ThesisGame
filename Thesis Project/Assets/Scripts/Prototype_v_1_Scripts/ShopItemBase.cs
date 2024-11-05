@@ -8,9 +8,13 @@ using UnityEngine.UI;
 
 namespace Prototype_v_1_Scripts
 {
-    public class ItemBase : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+    public class ShopItemBase : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
     {
-        // VARIABLES
+        // BUTTON
+        private Button button;
+        [SerializeField] bool isButtonInteractable;
+        
+        // INSTANTIATED ITEM
         [SerializeField] private ShopItemScriptableObject shopItemScriptableObject;
         [SerializeField] private GameObject shopItemPrefab;
         
@@ -20,7 +24,7 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private float itemImageFollowingSpeed = 10f;
         [SerializeField] private bool isItemImageFollowing;
 
-        public float zOffset;
+        public float zOffset = 5.0f;
 
         // DRAG AND DROP
         private GameObject selectedItem;
@@ -29,15 +33,29 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private bool isDragging;
         private Vector3 dragOffset;
         
+        // INVENTORY
+        private Inventory inventory;
+        
         // Start is called before the first frame update
         void Start()
         {
+            // BUTTON
+            button = GetComponent<Button>();
+            isButtonInteractable = false;
+            
+            // INSTANTIATED ITEM
             itemImagePrefab = Resources.Load<Image>("Prototype_v_1_Resources/Prefabs/ItemImage");
+            
+            // INVENTORY
+            inventory = Prototype_v_1_Scripts.GameManager.instance.shopManager.inventory;
         }
 
         // Update is called once per frame
         void Update()
         {
+            // Update the button state
+            UpdateButtonState();
+            
             // If the control type is autobattler, activate the shop interaction
             if (PlayerController.instance.controlType == ControlType.AutoBattler)
             {
@@ -53,12 +71,30 @@ namespace Prototype_v_1_Scripts
             }
         }
 
+        private void UpdateButtonState()
+        {
+            // Check if the player has enough currency to purchase the item
+            if (GameManager.instance.shopManager.inventory.HasCurrency(shopItemScriptableObject.requiredCurrency))
+            {
+                button.interactable = true;
+            }
+            else
+            {
+                button.interactable = false;
+            }
+            
+            isButtonInteractable = button.interactable;
+        }
+
         // BUTTON DOWN: INSTANTIATE THE ITEM
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (GameManager.instance.shopManager.isDrawerExpanded)
+            if (GameManager.instance.shopManager.isDrawerExpanded
+                && isButtonInteractable)
             {
                 Debug.Log("Pointer down");
+                
+                PurchaseItem(shopItemScriptableObject);
                 
                 // Get the mouse position in game world
                 Vector3 mousePosition = Input.mousePosition;
@@ -81,12 +117,26 @@ namespace Prototype_v_1_Scripts
                 dragOffset = selectedItem.transform.position - worldPosition;
             }
         }
+        
+        // PURCHASE THE ITEM
+        private void PurchaseItem(ShopItemScriptableObject item)
+        {
+            // Check if the player has enough currency, then purchase the item
+            if (inventory.HasCurrency(item.requiredCurrency))
+            {
+                // Remove the currency from the inventory
+                inventory.RemoveCurrency(item.requiredCurrency);
+                
+                // Remove the currency UI
+                GameManager.instance.shopCurrencyUI.RemoveInventoryDisplay(item.requiredCurrency);
+            }
+        }
 
         // CREATE THE ITEM IMAGE ON THE UI CANVAS (FOR DISPLAY ONLY)
         private void CreateItemImage()
         {
             itemImage = Instantiate(itemImagePrefab, GameManager.instance.HUD.transform);
-            itemImage.sprite = shopItemScriptableObject.itemSprite;
+            itemImage.sprite = shopItemScriptableObject.shopItemSprite;
             
             itemImage.transform.position = Input.mousePosition; // Set the position of the item image to the mouse position
             

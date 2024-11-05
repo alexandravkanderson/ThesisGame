@@ -42,6 +42,7 @@ namespace Prototype_v_1_Scripts
         
         // UI
         public GameObject HUD;
+        public ShopCurrencyUI shopCurrencyUI;
         
         // CAMERA
         public Vector3 cameraRotation = new Vector3(45f, 0f, 0f); // Camera rotation angle
@@ -96,6 +97,7 @@ namespace Prototype_v_1_Scripts
             
             // UI
             HUD = GameObject.Find("HUDCanvas");
+            shopCurrencyUI = FindObjectOfType<ShopCurrencyUI>();
             
             // Wiring Yarn Spinner
             dialogueRunner = FindObjectOfType<DialogueRunner>();

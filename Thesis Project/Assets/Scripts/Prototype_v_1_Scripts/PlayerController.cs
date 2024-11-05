@@ -26,7 +26,7 @@ namespace Prototype_v_1_Scripts
             }
         }
         
-        // Camera
+        // CAMERA
         private CameraManager cameraManager;
         
         // PLAYER COMPONENTS
@@ -97,7 +97,7 @@ namespace Prototype_v_1_Scripts
                     fallSpeed = 0f; // Resetting the fall speed
                 }
             
-                // INTERACTABLE OBJECT
+                // PICK UP INTERACTABLE OBJECT
                 if (isInteractable)
                 {
                     if (Input.GetMouseButtonDown(0))
@@ -109,7 +109,16 @@ namespace Prototype_v_1_Scripts
                         {
                             if (hit.transform.CompareTag("Interactable"))
                             {
-                                Debug.Log("Interactable object is clicked");
+                                // Pull the scriptable object from the interactable object
+                                EnvironmentItemBase item = hit.transform.GetComponentInParent<EnvironmentItemBase>();
+                                EnvironmentItemScriptableObject itemScriptableObject = item.environmentItemScriptableObject;
+                                
+                                // Add the object to the player's currency
+                                GameManager.instance.shopManager.inventory.AddCurrency(itemScriptableObject.environmentItemName);                 // data
+                                GameManager.instance.shopCurrencyUI.
+                                    UpdateInventoryDisplay(itemScriptableObject.environmentItemName, itemScriptableObject.environmentItemSprite); // UI
+                                
+                                // Destroy the object
                                 Destroy(hit.transform.parent.gameObject);
                             }
                         }

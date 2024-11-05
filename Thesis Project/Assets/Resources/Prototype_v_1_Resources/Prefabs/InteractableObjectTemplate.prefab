@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9196956705842398676}
   - component: {fileID: 1955748262229356969}
   m_Layer: 0
-  m_Name: lavender
+  m_Name: ItemImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 088f4922356cd6743b5de620e6dd5306, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dd75a11feff550f4d9462e46d87b03cd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,8 +93,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7376088353558528173}
+  - component: {fileID: 7389968933683018050}
   m_Layer: 0
-  m_Name: InteractableObject
+  m_Name: InteractableObjectTemplate
   m_TagString: ShopItem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,6 +118,20 @@ Transform:
   - {fileID: 449800406267732865}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7389968933683018050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5951558201964056830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d1b898e3dea6fb448d794df5c4d7223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  environmentItemScriptableObject: {fileID: 11400000, guid: f6c51148e5db17f419bcf964b00514e6,
+    type: 2}
 --- !u!1 &6247390759693435756
 GameObject:
   m_ObjectHideFlags: 0
