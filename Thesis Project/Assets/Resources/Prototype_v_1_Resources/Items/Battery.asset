@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec3c549ae185f754bbb2f77967cbc0e9, type: 3}
-  m_Name: Gauze
+  m_Name: Battery
   m_EditorClassIdentifier: 
-  shopItemName: Gauze
-  shopItemDescription: A white fabric used to dress wounds of any size and any subject.
-  shopItemSprite: {fileID: 21300000, guid: 62371257608357f4f9cddb1745329583, type: 3}
-  requiredCurrency: BlueFeather
+  shopItemName: Battery
+  shopItemDescription: A device of electric power that can supply power to any source.
+  shopItemSprite: {fileID: 21300000, guid: 8f4806b491075a94680869e69ce7dd8c, type: 3}
+  requiredCurrency: CharredFeather2

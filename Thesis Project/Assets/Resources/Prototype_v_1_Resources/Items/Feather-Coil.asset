@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b623dd36485ee1147bd182e9ebeddbf0, type: 3}
-  m_Name: Feather-Gauze
+  m_Name: Feather-Coil
   m_EditorClassIdentifier: 
-  environmentItemName: BlueFeather
+  environmentItemName: CharredFeather3
   environmentItemDescription: 
   environmentItemSprite: {fileID: 21300000, guid: dd75a11feff550f4d9462e46d87b03cd,
     type: 3}

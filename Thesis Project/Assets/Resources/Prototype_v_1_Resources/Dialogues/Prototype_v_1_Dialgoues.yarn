@@ -6,7 +6,7 @@ tags:
 
 title: Environmental_Level_TestDialogue
 ---
-Character: Test line 0.
-Bird: Test line 1.
+Character: Oh… it looks like there’s an injured bird on that branch.
+Character: Poor thing, it looks afraid.
 <<StartCameraTransitionToAutobattlerRotation ManagerHolder>>
 ===

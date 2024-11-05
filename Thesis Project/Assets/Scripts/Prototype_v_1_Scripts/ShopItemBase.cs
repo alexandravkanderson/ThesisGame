@@ -16,7 +16,7 @@ namespace Prototype_v_1_Scripts
         
         // INSTANTIATED ITEM
         [SerializeField] private ShopItemScriptableObject shopItemScriptableObject;
-        [SerializeField] private GameObject shopItemPrefab;
+        [FormerlySerializedAs("shopItemPrefab")] [SerializeField] private GameObject shopItemObjectPrefab;
         
         [SerializeField] private Image itemImagePrefab;
         [SerializeField] private Image itemImage;
@@ -45,6 +45,8 @@ namespace Prototype_v_1_Scripts
             
             // INSTANTIATED ITEM
             itemImagePrefab = Resources.Load<Image>("Prototype_v_1_Resources/Prefabs/ItemImage");
+            shopItemObjectPrefab = 
+                Resources.Load<GameObject>("Prototype_v_1_Resources/Prefabs/Items/ShopItemObjectPrefabTemplate");
             
             // INVENTORY
             inventory = Prototype_v_1_Scripts.GameManager.instance.shopManager.inventory;
@@ -102,7 +104,7 @@ namespace Prototype_v_1_Scripts
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
                 
                 // Instantiate the item in the world space
-                selectedItem = Instantiate(shopItemPrefab, worldPosition, Quaternion.Euler(GameManager.instance.cameraRotation));
+                selectedItem = Instantiate(shopItemObjectPrefab, worldPosition, Quaternion.Euler(GameManager.instance.cameraRotation));
                 
                 // Create the item image on the UI canvas
                 CreateItemImage();
@@ -163,6 +165,17 @@ namespace Prototype_v_1_Scripts
             {
                 ItemImageFollowing();
             }
+            
+            // DROP
+            if (Input.GetMouseButtonUp(0)
+                && isDragging
+                && selectedItem != null)
+            {
+                isDragging = false;
+                isItemImageFollowing = false;
+                
+                ItemDropping();
+            }
         }
         
         // DRAGGING THE ITEM 3D GAME OBJECT IN THE WORLD SPACE
@@ -199,6 +212,30 @@ namespace Prototype_v_1_Scripts
                 itemImage.transform.position, 
                 mousePosition, 
                 itemImageFollowingSpeed * Time.deltaTime);
+        }
+        
+        // DROPPING THE ITEM
+        private void ItemDropping()
+        {
+            if (selectedItem.GetComponentInChildren<ItemCollisionDetector>().isTriggeringWithPlayer)
+            {
+                Debug.Log("Item Dropped on the player");
+                
+                ApplyingItemEffect();
+            }
+            
+            // Destroy the item
+            Destroy(selectedItem);
+            selectedItem = null;
+            
+            // Destroy the item image
+            Destroy(itemImage.gameObject);
+        }
+        
+        // APPLYING THE ITEM EFFECT
+        private void ApplyingItemEffect()
+        {
+            // TODO: APPLY THE ITEM EFFECT
         }
 
         public void OnPointerEnter(PointerEventData eventData)

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec3c549ae185f754bbb2f77967cbc0e9, type: 3}
-  m_Name: Gauze
+  m_Name: Syringe
   m_EditorClassIdentifier: 
-  shopItemName: Gauze
-  shopItemDescription: A white fabric used to dress wounds of any size and any subject.
-  shopItemSprite: {fileID: 21300000, guid: 62371257608357f4f9cddb1745329583, type: 3}
-  requiredCurrency: BlueFeather
+  shopItemName: Syringe
+  shopItemDescription: This needle contains a crucial substance to mend injuries.
+  shopItemSprite: {fileID: 21300000, guid: 63a010f2efa255947bb6ac0f2687abf3, type: 3}
+  requiredCurrency: RedFeather
