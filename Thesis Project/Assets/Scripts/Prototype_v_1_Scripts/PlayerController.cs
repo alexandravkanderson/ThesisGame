@@ -223,6 +223,15 @@ namespace Prototype_v_1_Scripts
                 isGrounded = true;
             }
         }
+        
+        private void OnCollisionStay(Collision other)
+        {
+            // Check if the player is grounded
+            if (other.gameObject.CompareTag("Ground"))
+            {
+                isGrounded = true;
+            }
+        }
 
         private void OnCollisionExit(Collision other)
         {
@@ -353,7 +362,10 @@ namespace Prototype_v_1_Scripts
                 // Check if the player is next to the target
                 if (IsNextToTarget(step, target))
                 {
-                    break;
+                    // TODO ACTUAL ATTACK
+                    InvokeRepeating(nameof(PlayerFakeAttack), 0f, 0.75f);
+                    
+                    break; // Stop moving if the player is next to the target
                 }
                 
                 Vector3 targetWorldPosition =
@@ -381,6 +393,35 @@ namespace Prototype_v_1_Scripts
             // Check if the pawn is next to the target in X or Z direction
             return (Mathf.Abs(current.x - target.x) == 0 && current.y == target.y) || 
                    (Mathf.Abs(current.y - target.y) == 0 && current.x == target.x);
+        }
+
+        // THIS IS A FAKE FUNCTION OF ATTACKING, PLEASE REPLACE THIS LATER
+        private int counter = 0;
+
+        public int Counter
+        {
+            get
+            {
+                return counter;
+            }
+            set
+            {
+                counter = value;
+                if (counter == 10)
+                {
+                    CancelInvoke(nameof(PlayerFakeAttack));
+                    counter = 0;
+                    GameManager.instance.restartButton.SetActive(true);
+                }
+            }
+        }
+        
+        private void PlayerFakeAttack()
+        {
+            Debug.Log("Player is attacking");
+            Counter++;
+            
+            transform.GetChild(1).GetComponent<ParticleSystem>().Play();
         }
         
         /*// TODO: CODE OF DRAGGING OBJECT, NEED TO BE FIXED

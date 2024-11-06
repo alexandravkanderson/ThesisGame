@@ -91,6 +91,7 @@ namespace Prototype_v_1_Scripts
         // AUTOBATTLE
         public AStar aStar;
         [SerializeField] private bool isAutobattleStarted = false;
+        public GameObject restartButton;
 
         // Start is called before the first frame update
         void Start()
@@ -113,6 +114,10 @@ namespace Prototype_v_1_Scripts
             // Initializing the AB
             aStar = GetComponent<AStar>();
             isAutobattleStarted = false;
+            
+            // TEMP: SET THE RESTART BUTTON
+            restartButton = HUD.transform.GetChild(0).GetChild(3).gameObject;
+            restartButton.SetActive(false);
         }
 
         // Update is called once per frame
@@ -128,6 +133,15 @@ namespace Prototype_v_1_Scripts
             
             // Start the autobattle
             PlayerController.instance.MoveToPosition(levelManager.target.transform.position);
+            
+            // Hide the start button
+            HUD.transform.GetChild(0).GetChild(2).gameObject.SetActive(false);
+        }
+        
+        public void EndAutobattle()
+        {
+            isAutobattleStarted = false;
+            SceneManager.LoadScene(0);
         }
     }
 }
