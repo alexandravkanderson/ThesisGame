@@ -53,7 +53,7 @@ namespace Prototype_v_1_Scripts
 
         }
 
-        // CREATE GRID, GRID HEIGHT, GRID WIDTH, PLAYER GRID POSITION (IN 2D ARRAY, OPTIONAL)
+        // CREATE GRID, GRID HEIGHT, GRID WIDTH, PLAYER INITIAL GRID POSITION (IN 2D ARRAY, OPTIONAL)
         public void CreateGrid(int gridWidth, int gridHeight, 
                                int? playerGridPosX = null, int? playerGridPosY = null, float? groundLevelY = null)
         {
@@ -81,11 +81,16 @@ namespace Prototype_v_1_Scripts
                     Vector3 cellPosition = GetWorldPositionFromGridPosition(x, y); // Calculate the position for each cell (gridOrigin included)
                     
                     // Instantiate the cell, and assign the parent
-                    GameObject newCell = Instantiate(gridCellPrefab, cellPosition, Quaternion.identity) as GameObject; // Instantiate the cell
-                    newCell.transform.parent = gridHolder.transform; // Assign the parent
-                    newCell.name = $"Cell {x}, {y}"; // Name the cell for clarity in the hierarchy
+                    GameObject newCellObject = Instantiate(gridCellPrefab, cellPosition, Quaternion.identity) as GameObject; // Instantiate the cell
+                    newCellObject.transform.parent = gridHolder.transform; // Assign the parent
+                    newCellObject.name = $"Cell {x}, {y}"; // Name the cell for clarity in the hierarchy
                     
-                    grid[x, y] = newCell; // Store the cell in the grid array
+                    // Set the walkable / cost value of the cell
+                    GridCell gridCell = newCellObject.GetComponent<GridCell>();
+                    gridCell.isWalkable = true; // True by default
+                    gridCell.cost = 1;          // Default cost
+                    
+                    grid[x, y] = newCellObject; // Store the cell in the grid array
                 }
             }
             
@@ -121,10 +126,14 @@ namespace Prototype_v_1_Scripts
             return new Vector2Int(Mathf.FloorToInt(offsetPosition.x / gridCellSize), Mathf.FloorToInt(offsetPosition.z / gridCellSize));
         }
 
-        public bool IsWithinWalkableArea(Vector2Int gridPos)
+        // Check if the grid position is within the walkable area and is a cell walkable
+        public bool IsWalkable(Vector2Int gridPosition)
         {
-            return gridPos.x >= 0 && gridPos.x < gridWidth / 2 && 
-                   gridPos.y >= 0 && gridPos.y < gridHeight;
+            bool isCellWalkable = grid[gridPosition.x, gridPosition.y].GetComponent<GridCell>().isWalkable;
+            bool isWithinWalkableArea = gridPosition.x >= 0 && gridPosition.x < gridWidth / 2 && 
+                                        gridPosition.y >= 0 && gridPosition.y < gridHeight;
+            
+            return isCellWalkable && isWithinWalkableArea;
         }
 
         public void SetGridCellMaterial(Vector2Int gridPosition, Material material)

@@ -2204,6 +2204,8 @@ GameObject:
   - component: {fileID: 805559214}
   - component: {fileID: 805559216}
   - component: {fileID: 805559217}
+  - component: {fileID: 805559218}
+  - component: {fileID: 805559219}
   m_Layer: 0
   m_Name: ManagerHolder
   m_TagString: Untagged
@@ -2264,6 +2266,7 @@ MonoBehaviour:
   cameraManager: {fileID: 0}
   gridManager: {fileID: 0}
   shopManager: {fileID: 0}
+  levelManager: {fileID: 805559218}
   HUD: {fileID: 0}
   shopCurrencyUI: {fileID: 0}
   cameraRotation: {x: 50, y: 0, z: 0}
@@ -2307,6 +2310,31 @@ MonoBehaviour:
   duration: 2
   isDrawerExpanded: 0
   isDrawerMoving: 0
+--- !u!114 &805559218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805559212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05119e0af39b1e14081e7044b8c7337a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1506212265}
+--- !u!114 &805559219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805559212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c73dbd63d328449a04eea060f74cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &810196912
 GameObject:
   m_ObjectHideFlags: 0
@@ -3861,6 +3889,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1454077250}
   m_CullTransparentMesh: 1
+--- !u!1 &1506212265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7869363479167966536, guid: 21373c41b1a01ae4fba7802f3573a3fd,
+    type: 3}
+  m_PrefabInstance: {fileID: 3910878138175765361}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1530287715
 GameObject:
   m_ObjectHideFlags: 0
@@ -5399,7 +5433,7 @@ PrefabInstance:
     - target: {fileID: 552577261050658976, guid: 21373c41b1a01ae4fba7802f3573a3fd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.5
+      value: 49
       objectReference: {fileID: 0}
     - target: {fileID: 552577261050658976, guid: 21373c41b1a01ae4fba7802f3573a3fd,
         type: 3}
@@ -5452,6 +5486,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 67d107fdf96d6a54cb1e0320ea885375,
         type: 3}
+    - target: {fileID: 4703108396612219078, guid: 21373c41b1a01ae4fba7802f3573a3fd,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7869363479167966536, guid: 21373c41b1a01ae4fba7802f3573a3fd,
         type: 3}
       propertyPath: m_Name

@@ -39,6 +39,7 @@ namespace Prototype_v_1_Scripts
         public CameraManager cameraManager;
         public GridManager gridManager;
         public ShopManager shopManager;
+        public LevelManagerHeart levelManager; // NOTE: UNFINISHED
         
         // UI
         public GameObject HUD;
@@ -87,7 +88,8 @@ namespace Prototype_v_1_Scripts
             }
         }
         
-        // AUTOBATTLE STATUS
+        // AUTOBATTLE
+        public AStar aStar;
         [SerializeField] private bool isAutobattleStarted = false;
 
         // Start is called before the first frame update
@@ -108,7 +110,8 @@ namespace Prototype_v_1_Scripts
             // Initializing current progression to the beginning
             currentProgression = GameProgression.MainMenu;
             
-            // Initializing the AB status
+            // Initializing the AB
+            aStar = GetComponent<AStar>();
             isAutobattleStarted = false;
         }
 
@@ -122,6 +125,9 @@ namespace Prototype_v_1_Scripts
         public void StartAutobattle()
         {
             isAutobattleStarted = true;
+            
+            // Start the autobattle
+            PlayerController.instance.MoveToPosition(levelManager.target.transform.position);
         }
     }
 }

@@ -64,6 +64,9 @@ namespace Prototype_v_1_Scripts
         // AUTOBATTLER DRAG N DROP
         private bool isDragging = false;
 
+        // PATHFINDING
+        private Vector2Int playerGridPosition;
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -282,7 +285,7 @@ namespace Prototype_v_1_Scripts
                 Vector2Int targetGridPosition = 
                     GameManager.instance.gridManager.GetGridPositionFromWorldPosition(targetPosition);
 
-                if (GameManager.instance.gridManager.IsWithinWalkableArea(targetGridPosition))
+                if (GameManager.instance.gridManager.IsWalkable(targetGridPosition))
                 {
                     // Move the player to the target position
                     StartCoroutine(MoveToPosition(targetPosition, targetGridPosition));
@@ -324,7 +327,63 @@ namespace Prototype_v_1_Scripts
             isMoving = false; // Reset
         }
         
-        // TODO: CODE OF DRAGGING OBJECT, NEED TO BE FIXED
+        // PATHFINDING MOVEMENT
+        public void MoveToPosition(Vector3 targetPosition)
+        {
+            playerGridPosition = GameManager.instance.gridManager.GetGridPositionFromWorldPosition(playerTransform.position);
+            Debug.Log("Player's grid position: " + playerGridPosition);
+            
+            Vector2Int targetGridPosition = GameManager.instance.gridManager.GetGridPositionFromWorldPosition(targetPosition);
+            Debug.Log("Target grid position: " + targetGridPosition);
+            
+            // A star pathfinding
+            List<Vector2Int> path = GameManager.instance.aStar.FindPath(playerGridPosition, targetGridPosition);
+            
+            if (path != null)
+            {
+                StartCoroutine(MoveAlongPath(path, targetGridPosition));
+            }
+        }
+
+        private IEnumerator MoveAlongPath(List<Vector2Int> path, Vector2Int target)
+        {
+            // Iterate through each cell in the calculated path
+            foreach (Vector2Int step in path)
+            {
+                // Check if the player is next to the target
+                if (IsNextToTarget(step, target))
+                {
+                    break;
+                }
+                
+                Vector3 targetWorldPosition =
+                    GameManager.instance.gridManager.GetWorldPositionFromGridPosition(step.x, step.y);
+                targetWorldPosition.y = playerTransform.position.y; // Keep the player's Y position
+
+                // Move the player to the target position
+                while (Vector3.Distance(transform.position, targetWorldPosition) > 0.1f)
+                {
+                    playerTransform.position =
+                        Vector3.MoveTowards(
+                            playerTransform.position,
+                            targetWorldPosition,
+                            moveSpeedAB * Time.deltaTime);
+
+                    yield return null;
+                }
+                
+                playerGridPosition = step; // Update the player's grid position
+            }
+        }
+        
+        private bool IsNextToTarget(Vector2Int current, Vector2Int target)
+        {
+            // Check if the pawn is next to the target in X or Z direction
+            return (Mathf.Abs(current.x - target.x) == 0 && current.y == target.y) || 
+                   (Mathf.Abs(current.y - target.y) == 0 && current.x == target.x);
+        }
+        
+        /*// TODO: CODE OF DRAGGING OBJECT, NEED TO BE FIXED
         private void MouseDrag()
         {
             // If player clicks on the player object
@@ -373,6 +432,6 @@ namespace Prototype_v_1_Scripts
             Vector2Int gridPos = GameManager.instance.gridManager.GetGridPositionFromWorldPosition(playerTransform.position);
             Vector3 snappedPosition = GameManager.instance.gridManager.GetWorldPositionFromGridPosition(gridPos.x, gridPos.y);
             playerTransform.position = snappedPosition;
-        }
+        }*/
     }
 }
