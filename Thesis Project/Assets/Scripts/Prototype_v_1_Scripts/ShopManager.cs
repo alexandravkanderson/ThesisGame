@@ -105,6 +105,9 @@ namespace Prototype_v_1_Scripts
         // CURRENCIES
         private HashSet<string> currencyType = new HashSet<string>();
         
+        // SHOP ITEMS
+        private List<string> purchasedItems = new List<string>();
+        
         public void AddCurrency(string currency)
         {
             currencyType.Add(currency);
@@ -130,6 +133,18 @@ namespace Prototype_v_1_Scripts
             {
                 Debug.LogError("Currency not found: " + currency);
             }
+        }
+        
+        // PURCHASED ITEMS -- ADD ITEM
+        public void AddPurchasedItem(string item)
+        {
+            purchasedItems.Add(item);
+            Debug.Log("Item added to inventory: " + item);
+        }
+        
+        public bool HasPurchasedItem(string item)
+        {
+            return purchasedItems.Contains(item);
         }
     }
     

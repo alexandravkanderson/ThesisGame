@@ -36,6 +36,15 @@ namespace Prototype_v_1_Scripts
         // INVENTORY
         private Inventory inventory;
         
+        // PURCHASING ITEMS
+        private bool isPurchasePending; // FLAG THE ITEM FOR PURCHASE
+        
+        private void Awake()
+        {
+            // INVENTORY INITIALIZATION
+            inventory = new Inventory();
+        }
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -123,6 +132,14 @@ namespace Prototype_v_1_Scripts
         // PURCHASE THE ITEM
         private void PurchaseItem(ShopItemScriptableObject item)
         {
+            // Check if the player has enough currency, then set the item as pending purchase
+            if (inventory.HasCurrency(item.requiredCurrency))
+            {
+                // Flag the item for purchase
+                isPurchasePending = true;
+            }
+            
+            /*// OLD CODE, DO NOT TOUCH
             // Check if the player has enough currency, then purchase the item
             if (inventory.HasCurrency(item.requiredCurrency))
             {
@@ -131,7 +148,7 @@ namespace Prototype_v_1_Scripts
                 
                 // Remove the currency UI
                 GameManager.instance.shopCurrencyUI.RemoveInventoryDisplay(item.requiredCurrency);
-            }
+            }*/
         }
 
         // CREATE THE ITEM IMAGE ON THE UI CANVAS (FOR DISPLAY ONLY)
@@ -214,14 +231,35 @@ namespace Prototype_v_1_Scripts
                 itemImageFollowingSpeed * Time.deltaTime);
         }
         
-        // DROPPING THE ITEM
+        // DROPPING THE ITEM -- TO FINALIZE THE PURCHASE ONLY IF IT'S ON PLAYER
         private void ItemDropping()
         {
             if (selectedItem.GetComponentInChildren<ItemCollisionDetector>().isTriggeringWithPlayer)
             {
                 Debug.Log("Item Dropped on the player");
                 
-                ApplyingItemEffect();
+                // Finalize the purchase if the item is indeed dropped on the player
+                if (isPurchasePending)
+                {
+                    // Remove the currency from the inventory
+                    inventory.RemoveCurrency(shopItemScriptableObject.requiredCurrency);
+
+                    // Remove the currency UI
+                    GameManager.instance.shopCurrencyUI.RemoveInventoryDisplay(shopItemScriptableObject.requiredCurrency);
+
+                    // Apply the item effect
+                    ApplyingItemEffect();
+
+                    // Clear pending purchase status
+                    isPurchasePending = false;
+                }
+            }
+            else
+            {
+                // If not dropped on the player, reset purchase state and keep currency in inventory
+                isPurchasePending = false;
+                
+                Debug.Log("Item not dropped on player, purchase cancelled.");
             }
             
             // Destroy the item
