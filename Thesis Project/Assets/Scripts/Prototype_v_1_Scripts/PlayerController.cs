@@ -224,7 +224,7 @@ namespace Prototype_v_1_Scripts
             }
         }
         
-        private void OnCollisionStay(Collision other)
+        /*private void OnCollisionStay(Collision other)
         {
             // Check if the player is grounded
             if (other.gameObject.CompareTag("Ground"))
@@ -240,7 +240,7 @@ namespace Prototype_v_1_Scripts
             {
                 isGrounded = false;
             }
-        }
+        }*/
 
         private void OnTriggerEnter(Collider other)
         {
