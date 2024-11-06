@@ -86,6 +86,9 @@ namespace Prototype_v_1_Scripts
                 }
             }
         }
+        
+        // AUTOBATTLE STATUS
+        [SerializeField] private bool isAutobattleStarted = false;
 
         // Start is called before the first frame update
         void Start()
@@ -104,12 +107,21 @@ namespace Prototype_v_1_Scripts
             
             // Initializing current progression to the beginning
             currentProgression = GameProgression.MainMenu;
+            
+            // Initializing the AB status
+            isAutobattleStarted = false;
         }
 
         // Update is called once per frame
         void Update()
         {
             
+        }
+        
+        // AUTOBATTLE START
+        public void StartAutobattle()
+        {
+            isAutobattleStarted = true;
         }
     }
 }
