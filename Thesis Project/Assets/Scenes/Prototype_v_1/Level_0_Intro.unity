@@ -269,6 +269,8 @@ MonoBehaviour:
   sequence: []
   currentImageIndex: 0
   audioSource: {fileID: 0}
+  thunderSound: {fileID: 0}
+  heartbeatSound: {fileID: 8300000, guid: 66407890ee13bf547b41c5c590fcd95c, type: 3}
 --- !u!1 &506085711
 GameObject:
   m_ObjectHideFlags: 0
