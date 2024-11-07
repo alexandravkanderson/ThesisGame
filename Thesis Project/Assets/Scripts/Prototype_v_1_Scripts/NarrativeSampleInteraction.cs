@@ -34,7 +34,9 @@ namespace Prototype_v_1_Scripts
         [SerializeField] private int currentImageIndex = 0;
 
         [SerializeField] private AudioSource audioSource;
-    
+        [SerializeField] private AudioClip thunderSound;
+        [SerializeField] private AudioClip heartbeatSound;
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -101,14 +103,27 @@ namespace Prototype_v_1_Scripts
             {
                 if (currentImageIndex < sequence.Count - 1)
                 {
-                    if (currentImageIndex == sequence.Count - 2)
+                    if (currentImageIndex == sequence.Count - 3)
                     {
                         Debug.Log("Thunder sound!!");
                     
-                        // Play audio
+                        // Play thunder audio
                         if (audioSource != null)
                         {
                             audioSource.Play();
+                        }
+                    }
+                    else if (currentImageIndex == sequence.Count - 2)
+                    {
+                        Debug.Log("Beep beep...");
+                        
+                        // Play heartbeat audio
+                        if (audioSource != null)
+                        {
+                            audioSource.clip = heartbeatSound;
+                            audioSource.Play();
+                            
+                            Invoke(nameof(LoadAutobattle), 3.0f);
                         }
                     }
                 
