@@ -27,7 +27,7 @@ namespace Prototype_v_1_Scripts
             if (instance == null)
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
+                //DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -74,6 +74,7 @@ namespace Prototype_v_1_Scripts
                         break;
                     
                     case GameProgression.Lv1HeartEnvironment:
+                        SceneManager.LoadScene(2); // Load the environmental level scene
                         PlayerController.instance.controlType = ControlType.EnvironmentalLevel; // Switch control type to environmental level
                         break;
                     
@@ -116,8 +117,11 @@ namespace Prototype_v_1_Scripts
             isAutobattleStarted = false;
             
             // TEMP: SET THE RESTART BUTTON
-            restartButton = HUD.transform.GetChild(0).GetChild(3).gameObject;
-            restartButton.SetActive(false);
+            if (currentProgression == GameProgression.Lv1HeartEnvironment)
+            {
+                restartButton = HUD.transform.GetChild(0).GetChild(3).gameObject;
+                restartButton.SetActive(false);
+            }
         }
 
         // Update is called once per frame
