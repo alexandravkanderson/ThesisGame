@@ -75,7 +75,11 @@ namespace Prototype_v_1_Scripts
                     
                     case GameProgression.Lv1HeartEnvironment:
                         SceneManager.LoadScene(2); // Load the environmental level scene
+                        currentProgression = GameProgression.Lv1HeartEnvironment;
                         PlayerController.instance.controlType = ControlType.EnvironmentalLevel; // Switch control type to environmental level
+                        
+                        restartButton = GameObject.Find("ReStart");
+                        restartButton.SetActive(false);
                         break;
                     
                     case GameProgression.Lv1HeartAutobattler:
@@ -115,13 +119,6 @@ namespace Prototype_v_1_Scripts
             // Initializing the AB
             aStar = GetComponent<AStar>();
             isAutobattleStarted = false;
-            
-            // TEMP: SET THE RESTART BUTTON
-            if (currentProgression == GameProgression.Lv1HeartEnvironment)
-            {
-                restartButton = HUD.transform.GetChild(0).GetChild(3).gameObject;
-                restartButton.SetActive(false);
-            }
         }
 
         // Update is called once per frame

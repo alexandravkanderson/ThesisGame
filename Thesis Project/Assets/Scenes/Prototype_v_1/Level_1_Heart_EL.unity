@@ -2545,7 +2545,7 @@ MonoBehaviour:
   currentProgression: 0
   aStar: {fileID: 0}
   isAutobattleStarted: 0
-  restartButton: {fileID: 0}
+  restartButton: {fileID: 720310315}
 --- !u!114 &805559216
 MonoBehaviour:
   m_ObjectHideFlags: 0
